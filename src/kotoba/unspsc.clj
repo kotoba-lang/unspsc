@@ -6,8 +6,18 @@
 
 (def registry-resource "kotoba/unspsc/registry.edn")
 
+;; registry.edn is stored as Datomic/Datascript tx-data (a single-entity vector,
+;; see schema.edn / scripts/edn-datomize.bb): top-level keys that were already
+;; namespaced (:kotoba.registry/*) are unchanged, but the bare :unspsc key
+;; (a vector-of-maps, not a Datomic scalar) was pr-str'd into a :kotoba.unspsc/unspsc
+;; blob string. Reconstitute the original shape here so downstream callers
+;; (segments/by-segment/... below) keep working unchanged against a plain
+;; :unspsc vector of un-namespaced segment maps.
 (defn registry []
-  (edn/read-string (slurp (io/resource registry-resource))))
+  (let [entity (first (edn/read-string (slurp (io/resource registry-resource))))]
+    (-> entity
+        (dissoc :db/id :kotoba.unspsc/unspsc)
+        (assoc :unspsc (edn/read-string (:kotoba.unspsc/unspsc entity))))))
 
 (defn segments
   ([] (:unspsc (registry)))
