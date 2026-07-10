@@ -66,3 +66,24 @@ edge graph) and `cloud-itonami.product-party` (operator runtime). A product's
 to `cloud-itonami-unspsc-{segment}` blueprints via
 `open-business-hints`. This registry still owns only segment maturity /
 technology stacks — not the product–company edges themselves.
+
+## Product digital twin (SBOM + CAD + physics + 3D)
+
+`kotoba.unspsc.product` (portable `.cljc`) is the **shared product descriptor**
+for UNSPSC-keyed trade items consumed by:
+
+| Consumer | Uses |
+|---|---|
+| cloud-itonami | `->product-party-entity`, `->plm-bom-props`, open-business routing |
+| network-isekai | `cad-features-isekai`, `render-ir`, `sbom-cyclonedx-lite` / feature SBOM |
+
+Each twin carries:
+
+- **identity** — `:product/id`, 8-digit `:product/unspsc`, 2-digit segment
+- **SBOM** — component tree (qty, mass, material, role); CycloneDX-lite projector
+- **CAD** — feature tree (`:extrude`/`:revolve`/`:boss`) matching `isekai.ui.cad`
+- **physics** — mass kg, bbox mm, density, material class
+- **3D** — render-IR instances + logical glTF descriptor (`:product/gltf-ref` for real binaries)
+
+Catalog entries are **representative** (not confidential OEM design). Real STEP/glTF
+binaries stay on annex/B2; the twin is the pure EDN contract both apps share.
