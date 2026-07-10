@@ -424,7 +424,77 @@
      [(cad-feature {:id "case" :kind :extrude :order 0 :name "case"
                     :x 0 :y 0 :z 0 :w 400 :h 80})
       (cad-feature {:id "handle" :kind :revolve :order 1 :name "handle"
-                    :x 0 :y 120 :z 80 :r 12 :h 30})]})])
+                    :x 0 :y 120 :z 80 :r 12 :h 30})]})
+
+   ;; Curated open-business blueprint segments 10 / 39 / 73 (complete the five)
+   (product
+    {:id "prod.hive-sensor-array"
+     :name "Apiary hive sensor array"
+     :unspsc "10151500"
+     :sector :agriculture
+     :gltf-ref "asset://unspsc/10/hive-sensor-array.glb"
+     :physics {:mass-kg 1.8 :bbox-mm [200 200 80] :density-g-cm3 1.2
+               :material-class :electronics}
+     :components
+     [(component {:id "part.th-sensor" :name "Temp/humidity sensor" :unspsc "41111900"
+                  :qty 4 :mass-kg 0.02 :material :electronics :role :part})
+      (component {:id "part.radio" :name "LoRa radio" :unspsc "43191500"
+                  :qty 1 :mass-kg 0.05 :material :electronics :role :part})
+      (component {:id "part.housing" :name "Weather housing" :unspsc "24112400"
+                  :qty 1 :mass-kg 0.4 :material :polymer :role :assembly})]
+     :features
+     [(cad-feature {:id "base" :kind :extrude :order 0 :name "base"
+                    :x 0 :y 0 :z 0 :w 200 :h 20})
+      (cad-feature {:id "mast" :kind :revolve :order 1 :name "mast"
+                    :x 0 :y 0 :z 20 :r 15 :h 50})]})
+
+   (product
+    {:id "prod.led-panel-driver"
+     :name "LED panel driver module"
+     :unspsc "39111500"
+     :sector :electrical
+     :gltf-ref "asset://unspsc/39/led-panel-driver.glb"
+     :physics {:mass-kg 0.65 :bbox-mm [180 90 40] :density-g-cm3 2.1
+               :material-class :electronics}
+     :components
+     [(component {:id "part.psu" :name "Constant-current PSU" :unspsc "39121000"
+                  :qty 1 :mass-kg 0.25 :material :electronics :role :part})
+      (component {:id "part.pcb-drv" :name "Driver PCB" :unspsc "32101500"
+                  :qty 1 :mass-kg 0.08 :material :fr4 :role :assembly})
+      (component {:id "part.heatsink" :name "Aluminum heatsink" :unspsc "40101800"
+                  :qty 1 :mass-kg 0.2 :material :aluminum :role :part})]
+     :features
+     [(cad-feature {:id "enclosure" :kind :extrude :order 0 :name "enclosure"
+                    :x 0 :y 0 :z 0 :w 180 :h 40})
+      (cad-feature {:id "heatsink" :kind :boss :order 1 :name "heatsink"
+                    :x 0 :y 0 :z 40 :w 160 :h 25})]})
+
+   (product
+    {:id "prod.line-cert-kit"
+     :name "Manufacturing line certification kit"
+     :unspsc "73101500"
+     :sector :industrial-services
+     :gltf-ref "asset://unspsc/73/line-cert-kit.glb"
+     :physics {:mass-kg 4.5 :bbox-mm [500 300 120] :density-g-cm3 1.5
+               :material-class :mixed}
+     :components
+     [(component {:id "part.gauge" :name "Calibrated gauge block" :unspsc "41111600"
+                  :qty 6 :mass-kg 0.3 :material :steel :role :part})
+      (component {:id "part.logger" :name "Process logger" :unspsc "43211500"
+                  :qty 1 :mass-kg 0.5 :material :electronics :role :part})
+      (component {:id "part.case-cert" :name "Hard case" :unspsc "24120000"
+                  :qty 1 :mass-kg 1.2 :material :polymer :role :packaging})
+      (component {:id "sw.cert-fw" :name "Cert workflow firmware" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "case" :kind :extrude :order 0 :name "case"
+                    :x 0 :y 0 :z 0 :w 500 :h 120})
+      (cad-feature {:id "logger" :kind :boss :order 1 :name "logger"
+                    :x -80 :y 0 :z 120 :w 100 :h 30})]})])
+
+(def curated-blueprint-segments
+  "Open-business curated UNSPSC segments that should each have ≥1 twin."
+  ["10" "27" "39" "43" "73"])
 
 (defn by-id
   ([] (into {} (map (juxt :product/id identity) catalog)))
@@ -448,13 +518,31 @@
       (filterv #(= digits (:product/unspsc %)) catalog))))
 
 (defn catalog-summary
-  "Operator-facing maturity of the twin catalog."
+  "Operator-facing maturity of the twin catalog.
+
+  `:curated-blueprint-coverage` is the fraction of open-business curated
+  segments (10/27/39/43/73) that have at least one twin with SBOM+CAD+physics."
   []
-  (let [segs (mapv :product/unspsc-segment catalog)]
+  (let [segs (mapv :product/unspsc-segment catalog)
+        seg-set (set segs)
+        curated curated-blueprint-segments
+        curated-hits (filterv seg-set curated)
+        complete? (fn [p]
+                    (and (seq (:product/sbom p))
+                         (seq (:product/cad-features p))
+                         (:product/physics p)))]
     {:products (count catalog)
-     :segments (vec (sort (set segs)))
+     :segments (vec (sort seg-set))
      :with-sbom (count (filter #(seq (:product/sbom %)) catalog))
      :with-cad (count (filter #(seq (:product/cad-features %)) catalog))
      :with-physics (count (filter :product/physics catalog))
      :with-gltf-ref (count (filter :product/gltf-ref catalog))
+     :with-full-twin (count (filter complete? catalog))
+     :curated-blueprint-segments curated
+     :curated-blueprint-hits curated-hits
+     :curated-blueprint-missing (filterv (complement seg-set) curated)
+     :curated-blueprint-coverage
+     (if (seq curated)
+       (double (/ (count curated-hits) (count curated)))
+       0.0)
      :ids (mapv :product/id catalog)}))
