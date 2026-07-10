@@ -569,7 +569,111 @@
      [(cad-feature {:id "body" :kind :extrude :order 0 :name "body-panel"
                     :x 0 :y 0 :z 0 :w 300 :h 8})
       (cad-feature {:id "sleeve" :kind :boss :order 1 :name "sleeve"
-                    :x 160 :y 0 :z 0 :w 80 :h 6})]})])
+                    :x 160 :y 0 :z 0 :w 80 :h 6})]})
+
+   ;; Commodity-exact twins for seed products that previously only matched by segment
+   (product
+    {:id "prod.cotton-tshirt"
+     :name "Cotton T-shirt (seed commodity)"
+     :unspsc "53102516"
+     :sector :apparel
+     :gltf-ref "asset://unspsc/53/cotton-tshirt.glb"
+     :physics {:mass-kg 0.19 :bbox-mm [310 210 20] :density-g-cm3 0.3
+               :material-class :textile}
+     :components
+     [(component {:id "part.fabric-tee" :name "Cotton jersey body" :unspsc "11151700"
+                  :qty 1 :mass-kg 0.16 :material :cotton :role :material})
+      (component {:id "part.neck" :name "Rib neck band" :unspsc "11151700"
+                  :qty 1 :mass-kg 0.01 :material :cotton :role :part})]
+     :features
+     [(cad-feature {:id "body" :kind :extrude :order 0 :name "body"
+                    :x 0 :y 0 :z 0 :w 310 :h 8})
+      (cad-feature {:id "collar" :kind :revolve :order 1 :name "collar"
+                    :x 0 :y 90 :z 8 :r 40 :h 6})]})
+
+   (product
+    {:id "prod.5g-radio"
+     :name "5G radio unit"
+     :unspsc "43222609"
+     :sector :telecom
+     :gltf-ref "asset://unspsc/43/5g-radio.glb"
+     :physics {:mass-kg 8.5 :bbox-mm [400 300 150] :density-g-cm3 1.8
+               :material-class :electronics}
+     :components
+     [(component {:id "part.rf" :name "RF front-end" :unspsc "32101500"
+                  :qty 1 :mass-kg 1.2 :material :electronics :role :part})
+      (component {:id "part.antenna" :name "Antenna array" :unspsc "43191500"
+                  :qty 1 :mass-kg 2.0 :material :electronics :role :assembly})
+      (component {:id "part.psu-radio" :name "Power module" :unspsc "39121000"
+                  :qty 1 :mass-kg 1.5 :material :electronics :role :part})]
+     :features
+     [(cad-feature {:id "chassis" :kind :extrude :order 0 :name "chassis"
+                    :x 0 :y 0 :z 0 :w 400 :h 150})
+      (cad-feature {:id "antenna" :kind :boss :order 1 :name "antenna"
+                    :x 0 :y 0 :z 150 :w 380 :h 40})]})
+
+   (product
+    {:id "prod.ev-vehicle"
+     :name "Battery-electric passenger vehicle"
+     :unspsc "25101503"
+     :sector :automotive
+     :gltf-ref "asset://unspsc/25/ev-vehicle.glb"
+     :physics {:mass-kg 1800.0 :bbox-mm [4500 1800 1500] :density-g-cm3 0.15
+               :material-class :mixed}
+     :components
+     [(component {:id "part.pack" :name "Traction pack" :unspsc "26111701"
+                  :qty 1 :mass-kg 450 :material :li-ion :role :assembly})
+      (component {:id "part.motor" :name "Drive motor" :unspsc "26101500"
+                  :qty 1 :mass-kg 80 :material :steel :role :part})
+      (component {:id "part.body-in-white" :name "BIW shell" :unspsc "25171500"
+                  :qty 1 :mass-kg 350 :material :aluminum :role :assembly})]
+     :features
+     [(cad-feature {:id "body" :kind :extrude :order 0 :name "body"
+                    :x 0 :y 0 :z 0 :w 4500 :h 1500})
+      (cad-feature {:id "wheel" :kind :revolve :order 1 :name "wheel"
+                    :x -1500 :y -700 :z 0 :r 350 :h 200})]})
+
+   (product
+    {:id "prod.aircraft-narrowbody"
+     :name "Narrowbody commercial aircraft"
+     :unspsc "25111500"
+     :sector :aerospace
+     :gltf-ref "asset://unspsc/25/aircraft-narrowbody.glb"
+     :physics {:mass-kg 42000.0 :bbox-mm [38000 35000 12000] :density-g-cm3 0.05
+               :material-class :superalloy}
+     :components
+     [(component {:id "part.fuselage" :name "Fuselage sections" :unspsc "25111500"
+                  :qty 1 :mass-kg 12000 :material :aluminum :role :assembly})
+      (component {:id "part.wing" :name "Wing box" :unspsc "25111500"
+                  :qty 2 :mass-kg 4000 :material :composite :role :assembly})
+      (component {:id "part.engine" :name "Turbofan" :unspsc "25101504"
+                  :qty 2 :mass-kg 2500 :material :ni-superalloy :role :part})]
+     :features
+     [(cad-feature {:id "fuselage" :kind :revolve :order 0 :name "fuselage"
+                    :x 0 :y 0 :z 0 :r 2000 :h 38000})
+      (cad-feature {:id "wing" :kind :extrude :order 1 :name "wing"
+                    :x 0 :y 0 :z 5000 :w 35000 :h 800})]})
+
+   (product
+    {:id "prod.chocolate-spread-jar"
+     :name "Chocolate hazelnut spread jar"
+     :unspsc "50161900"
+     :sector :food-beverage
+     :gltf-ref "asset://unspsc/50/chocolate-spread-jar.glb"
+     :physics {:mass-kg 0.85 :bbox-mm [90 90 120] :density-g-cm3 1.1
+               :material-class :glass}
+     :components
+     [(component {:id "part.jar" :name "Glass jar" :unspsc "24121500"
+                  :qty 1 :mass-kg 0.25 :material :glass :role :packaging})
+      (component {:id "part.spread" :name "Spread fill" :unspsc "50192400"
+                  :qty 1 :mass-kg 0.55 :material :agricultural :role :material})
+      (component {:id "part.lid" :name "Metal lid" :unspsc "24121500"
+                  :qty 1 :mass-kg 0.03 :material :steel :role :part})]
+     :features
+     [(cad-feature {:id "jar" :kind :revolve :order 0 :name "jar"
+                    :x 0 :y 0 :z 0 :r 45 :h 110})
+      (cad-feature {:id "lid" :kind :boss :order 1 :name "lid"
+                    :x 0 :y 0 :z 110 :w 90 :h 10})]})])
 
 (def curated-blueprint-segments
   "Open-business curated UNSPSC segments that should each have ≥1 twin."
@@ -674,6 +778,7 @@
        (double (/ (count (filter seg-set seed-traffic-segments))
                   (count seed-traffic-segments)))
        0.0)
+     :commodities (into (sorted-set) (map :product/unspsc catalog))
      :ids (mapv :product/id catalog)}))
 
 (defn segment-twin-stats
