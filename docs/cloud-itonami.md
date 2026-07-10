@@ -57,3 +57,12 @@ compete with the etzhayyim actor's commodity data. If a
 `cloud-itonami-unspsc-*` operator business ever needs real commodity-level
 classification at runtime, it should call the etzhayyim `unspsc` actor's
 XRPC surface rather than re-deriving commodity data here.
+
+## Product ↔ party join (ADR-2607106100)
+
+Trade items and companies connect through `kotoba-lang/product-party` (pure
+edge graph) and `cloud-itonami.product-party` (operator runtime). A product's
+8-digit UNSPSC yields a segment via `product->unspsc-segment`, which routes
+to `cloud-itonami-unspsc-{segment}` blueprints via
+`open-business-hints`. This registry still owns only segment maturity /
+technology stacks — not the product–company edges themselves.
