@@ -4,7 +4,7 @@
 
 (deftest catalog-has-sbom-cad-physics-3d
   (let [sum (prod/catalog-summary)]
-    (is (>= (:products sum) 11))
+    (is (>= (:products sum) 16))
     (is (= (:products sum) (:with-sbom sum) (:with-cad sum) (:with-physics sum)
            (:with-full-twin sum)))
     (is (pos? (:with-gltf-ref sum)))
@@ -88,12 +88,15 @@
       (is (= :commodity (:match r)))
       (is (== 0.8 (:confidence r)))
       (is (= "50202301" (get-in r [:twin :product/unspsc])))))
-  (testing "segment fallback"
-    (let [r (prod/resolve-twin {:product/id "prod.5g-radio"
-                                :product/unspsc "43222609"})]
-      (is (#{:commodity :segment} (:match r)))
-      (is (true? (boolean (:twin r))))
-      (is (= "43" (get-in r [:twin :product/unspsc-segment])))))
+  (testing "seed commodities now match at commodity confidence"
+    (doseq [[pid code] [["prod.5g-radio" "43222609"]
+                        ["prod.ev-vehicle" "25101503"]
+                        ["prod.aircraft-narrowbody" "25111500"]
+                        ["prod.cotton-tshirt" "53102516"]
+                        ["gtin.03017620422003" "50161900"]]]
+      (let [r (prod/resolve-twin {:product/id pid :product/unspsc code})]
+        (is (#{:id :commodity} (:match r)) (str pid " match " (:match r)))
+        (is (>= (:confidence r) 0.8) (str pid " conf")))))
   (testing "unknown"
     (is (nil? (prod/resolve-twin {:product/id "prod.unknown"
                                   :product/unspsc "99999999"})))))
