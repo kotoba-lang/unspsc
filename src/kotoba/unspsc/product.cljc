@@ -980,7 +980,291 @@
       (cad-feature {:id "back" :kind :boss :order 1 :name "back"
                     :x 0 :y -200 :z 700 :w 480 :h 500})
       (cad-feature {:id "base" :kind :revolve :order 2 :name "base"
-                    :x 0 :y 0 :z 0 :r 350 :h 50})]})])
+                    :x 0 :y 0 :z 0 :r 350 :h 50})]})
+
+   ;; ── densify-3 curated :blueprint (target density ≥3) ──
+   (product
+    {:id "prod.edge-compute-node"
+     :name "Edge compute node 1U"
+     :unspsc "43211508"
+     :brand "demo-edge"
+     :sector :electronics
+     :gltf-ref "asset://unspsc/43/edge-compute-node.glb"
+     :physics {:mass-kg 8.5 :bbox-mm [450 400 45] :density-g-cm3 1.8
+               :material-class :electronics}
+     :components
+     [(component {:id "part.cpu-edge" :name "Edge CPU" :unspsc "32101604"
+                  :qty 1 :mass-kg 0.05 :material :silicon :role :part})
+      (component {:id "part.ssd" :name "NVMe SSD" :unspsc "43201800"
+                  :qty 2 :mass-kg 0.08 :material :electronics :role :part})
+      (component {:id "part.mobo" :name "Carrier board" :unspsc "32101500"
+                  :qty 1 :mass-kg 0.4 :material :fr4 :role :assembly})
+      (component {:id "part.chassis-1u" :name "1U chassis" :unspsc "30171500"
+                  :qty 1 :mass-kg 3.5 :material :steel :role :assembly})
+      (component {:id "sw.edge-os" :name "Edge OS image" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "chassis" :kind :extrude :order 0 :name "chassis"
+                    :x 0 :y 0 :z 0 :w 450 :h 45})
+      (cad-feature {:id "psu" :kind :boss :order 1 :name "psu"
+                    :x 180 :y 0 :z 10 :w 80 :h 40})
+      (cad-feature {:id "fan" :kind :revolve :order 2 :name "fan"
+                    :x -180 :y 0 :z 20 :r 20 :h 20})]})
+
+   (product
+    {:id "prod.hydraulic-shop-press"
+     :name "Hydraulic shop press 20t"
+     :unspsc "27112705"
+     :sector :tools
+     :gltf-ref "asset://unspsc/27/hydraulic-shop-press.glb"
+     :physics {:mass-kg 95.0 :bbox-mm [600 500 1600] :density-g-cm3 7.0
+               :material-class :steel}
+     :components
+     [(component {:id "part.ram" :name "Hydraulic ram" :unspsc "27112700"
+                  :qty 1 :mass-kg 25 :material :steel :role :part})
+      (component {:id "part.frame-press" :name "H-frame" :unspsc "30103600"
+                  :qty 1 :mass-kg 50 :material :steel :role :assembly})
+      (component {:id "part.pump" :name "Hand pump" :unspsc "27112700"
+                  :qty 1 :mass-kg 8 :material :steel :role :part})
+      (component {:id "part.hose" :name "HP hose" :unspsc "40151500"
+                  :qty 1 :mass-kg 1.2 :material :polymer :role :part})]
+     :features
+     [(cad-feature {:id "frame" :kind :extrude :order 0 :name "frame"
+                    :x 0 :y 0 :z 0 :w 600 :h 1600})
+      (cad-feature {:id "ram" :kind :revolve :order 1 :name "ram"
+                    :x 0 :y 0 :z 800 :r 40 :h 400})
+      (cad-feature {:id "base" :kind :boss :order 2 :name "base"
+                    :x 0 :y 0 :z 0 :w 500 :h 80})]})
+
+   (product
+    {:id "prod.din-contactor"
+     :name "DIN rail contactor 3-phase"
+     :unspsc "39121522"
+     :sector :electrical
+     :gltf-ref "asset://unspsc/39/din-contactor.glb"
+     :physics {:mass-kg 0.42 :bbox-mm [90 60 75] :density-g-cm3 2.0
+               :material-class :electronics}
+     :components
+     [(component {:id "part.coil" :name "Control coil" :unspsc "39121500"
+                  :qty 1 :mass-kg 0.08 :material :copper :role :part})
+      (component {:id "part.contacts" :name "Power contacts" :unspsc "39121500"
+                  :qty 3 :mass-kg 0.03 :material :silver :role :part})
+      (component {:id "part.housing-c" :name "DIN housing" :unspsc "24112400"
+                  :qty 1 :mass-kg 0.15 :material :polymer :role :assembly})
+      (component {:id "part.arc" :name "Arc chute" :unspsc "39121500"
+                  :qty 1 :mass-kg 0.05 :material :ceramic :role :part})]
+     :features
+     [(cad-feature {:id "body" :kind :extrude :order 0 :name "body"
+                    :x 0 :y 0 :z 0 :w 90 :h 75})
+      (cad-feature {:id "din" :kind :boss :order 1 :name "din-clip"
+                    :x 0 :y -30 :z 10 :w 80 :h 15})
+      (cad-feature {:id "terminals" :kind :boss :order 2 :name "terminals"
+                    :x 0 :y 25 :z 60 :w 70 :h 12})]})
+
+   (product
+    {:id "prod.seedling-tray-sensor"
+     :name "Seedling tray moisture array"
+     :unspsc "10151508"
+     :sector :agriculture
+     :gltf-ref "asset://unspsc/10/seedling-tray-sensor.glb"
+     :physics {:mass-kg 0.65 :bbox-mm [540 280 50] :density-g-cm3 0.9
+               :material-class :electronics}
+     :components
+     [(component {:id "part.tray" :name "Nursery tray" :unspsc "24112400"
+                  :qty 1 :mass-kg 0.25 :material :polymer :role :packaging})
+      (component {:id "part.m-sensor" :name "Moisture probes" :unspsc "41111900"
+                  :qty 12 :mass-kg 0.01 :material :electronics :role :part})
+      (component {:id "part.bus" :name "Sensor bus hub" :unspsc "43211500"
+                  :qty 1 :mass-kg 0.08 :material :electronics :role :assembly})
+      (component {:id "sw.grow" :name "Grow monitor FW" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "tray" :kind :extrude :order 0 :name "tray"
+                    :x 0 :y 0 :z 0 :w 540 :h 40})
+      (cad-feature {:id "hub" :kind :boss :order 1 :name "hub"
+                    :x 250 :y 0 :z 40 :w 60 :h 20})
+      (cad-feature {:id "probe" :kind :revolve :order 2 :name "probe"
+                    :x -200 :y 0 :z 20 :r 3 :h 30})]})
+
+   (product
+    {:id "prod.laser-alignment-kit"
+     :name "Laser shaft alignment kit"
+     :unspsc "73101508"
+     :sector :industrial-services
+     :gltf-ref "asset://unspsc/73/laser-alignment-kit.glb"
+     :physics {:mass-kg 3.8 :bbox-mm [400 300 150] :density-g-cm3 1.6
+               :material-class :mixed}
+     :components
+     [(component {:id "part.laser" :name "Laser emitter" :unspsc "41111600"
+                  :qty 2 :mass-kg 0.4 :material :electronics :role :part})
+      (component {:id "part.detector" :name "Detector head" :unspsc "41111600"
+                  :qty 2 :mass-kg 0.35 :material :electronics :role :part})
+      (component {:id "part.bracket" :name "Shaft brackets" :unspsc "31161700"
+                  :qty 4 :mass-kg 0.2 :material :aluminum :role :part})
+      (component {:id "part.case-la" :name "Hard case" :unspsc "24120000"
+                  :qty 1 :mass-kg 1.0 :material :polymer :role :packaging})
+      (component {:id "sw.align" :name "Alignment app" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "case" :kind :extrude :order 0 :name "case"
+                    :x 0 :y 0 :z 0 :w 400 :h 150})
+      (cad-feature {:id "emitter" :kind :boss :order 1 :name "emitter"
+                    :x -80 :y 0 :z 150 :w 50 :h 40})
+      (cad-feature {:id "bracket" :kind :revolve :order 2 :name "bracket"
+                    :x 80 :y 0 :z 150 :r 25 :h 30})]})
+
+   ;; ── wave-3 goods segments (registry breadth, stay :spec) ──
+   (product
+    {:id "prod.solvent-drum-200l"
+     :name "Industrial solvent drum 200L"
+     :unspsc "12191500"
+     :sector :chemicals
+     :gltf-ref "asset://unspsc/12/solvent-drum-200l.glb"
+     :physics {:mass-kg 220.0 :bbox-mm [600 600 900] :density-g-cm3 0.85
+               :material-class :steel}
+     :components
+     [(component {:id "part.drum" :name "Steel drum" :unspsc "24121500"
+                  :qty 1 :mass-kg 18 :material :steel :role :packaging})
+      (component {:id "part.solvent" :name "Solvent fill" :unspsc "12191500"
+                  :qty 1 :mass-kg 170 :material :chemical :role :material})
+      (component {:id "part.bung" :name "Bung plugs" :unspsc "24121500"
+                  :qty 2 :mass-kg 0.1 :material :steel :role :part})
+      (component {:id "part.label-haz" :name "GHS label" :unspsc "14111800"
+                  :qty 1 :mass-kg 0.01 :material :paper :role :part})]
+     :features
+     [(cad-feature {:id "drum" :kind :revolve :order 0 :name "drum"
+                    :x 0 :y 0 :z 0 :r 300 :h 880})
+      (cad-feature {:id "rim" :kind :boss :order 1 :name "rim"
+                    :x 0 :y 0 :z 880 :w 600 :h 20})
+      (cad-feature {:id "bung" :kind :boss :order 2 :name "bung"
+                    :x 100 :y 0 :z 900 :w 50 :h 30})]})
+
+   (product
+    {:id "prod.diesel-jerrycan"
+     :name "Diesel jerrycan 20L"
+     :unspsc "15101500"
+     :sector :fuels
+     :gltf-ref "asset://unspsc/15/diesel-jerrycan.glb"
+     :physics {:mass-kg 18.5 :bbox-mm [350 200 450] :density-g-cm3 0.85
+               :material-class :steel}
+     :components
+     [(component {:id "part.can" :name "Steel can body" :unspsc "24121500"
+                  :qty 1 :mass-kg 2.5 :material :steel :role :packaging})
+      (component {:id "part.diesel" :name "Diesel fill" :unspsc "15101500"
+                  :qty 1 :mass-kg 15.5 :material :fuel :role :material})
+      (component {:id "part.spout" :name "Flex spout" :unspsc "40151500"
+                  :qty 1 :mass-kg 0.2 :material :polymer :role :part})
+      (component {:id "part.cap" :name "Cap seal" :unspsc "24121500"
+                  :qty 1 :mass-kg 0.05 :material :polymer :role :part})]
+     :features
+     [(cad-feature {:id "body" :kind :extrude :order 0 :name "body"
+                    :x 0 :y 0 :z 0 :w 350 :h 450})
+      (cad-feature {:id "handle" :kind :revolve :order 1 :name "handle"
+                    :x 0 :y 80 :z 420 :r 15 :h 80})
+      (cad-feature {:id "spout" :kind :boss :order 2 :name "spout"
+                    :x 120 :y 0 :z 450 :w 40 :h 50})]})
+
+   (product
+    {:id "prod.mini-excavator-bucket"
+     :name "Mini excavator digging bucket"
+     :unspsc "22101500"
+     :sector :construction
+     :gltf-ref "asset://unspsc/22/mini-excavator-bucket.glb"
+     :physics {:mass-kg 85.0 :bbox-mm [600 500 450] :density-g-cm3 7.5
+               :material-class :steel}
+     :components
+     [(component {:id "part.shell-b" :name "Bucket shell" :unspsc "22101500"
+                  :qty 1 :mass-kg 55 :material :steel :role :assembly})
+      (component {:id "part.teeth" :name "Bucket teeth" :unspsc "22101500"
+                  :qty 5 :mass-kg 2.5 :material :steel :role :part})
+      (component {:id "part.pins" :name "Hinge pins" :unspsc "31161700"
+                  :qty 2 :mass-kg 1.5 :material :steel :role :part})
+      (component {:id "part.bush" :name "Bushings" :unspsc "31161700"
+                  :qty 4 :mass-kg 0.3 :material :bronze :role :part})]
+     :features
+     [(cad-feature {:id "shell" :kind :extrude :order 0 :name "shell"
+                    :x 0 :y 0 :z 0 :w 600 :h 400})
+      (cad-feature {:id "tooth" :kind :boss :order 1 :name "teeth"
+                    :x 0 :y 200 :z 0 :w 500 :h 80})
+      (cad-feature {:id "ear" :kind :revolve :order 2 :name "hinge-ear"
+                    :x 0 :y -200 :z 300 :r 40 :h 50})]})
+
+   (product
+    {:id "prod.pallet-jack"
+     :name "Manual pallet jack 2.5t"
+     :unspsc "24101600"
+     :sector :material-handling
+     :gltf-ref "asset://unspsc/24/pallet-jack.glb"
+     :physics {:mass-kg 75.0 :bbox-mm [1600 550 1200] :density-g-cm3 3.0
+               :material-class :steel}
+     :components
+     [(component {:id "part.forks" :name "Forks" :unspsc "24101600"
+                  :qty 2 :mass-kg 18 :material :steel :role :part})
+      (component {:id "part.hyd" :name "Hydraulic unit" :unspsc "27112700"
+                  :qty 1 :mass-kg 12 :material :steel :role :assembly})
+      (component {:id "part.wheels" :name "Load wheels" :unspsc "31161700"
+                  :qty 4 :mass-kg 2.0 :material :polymer :role :part})
+      (component {:id "part.handle-pj" :name "Steering handle" :unspsc "24101600"
+                  :qty 1 :mass-kg 5 :material :steel :role :part})]
+     :features
+     [(cad-feature {:id "fork" :kind :extrude :order 0 :name "forks"
+                    :x 0 :y 0 :z 50 :w 1600 :h 50})
+      (cad-feature {:id "mast" :kind :boss :order 1 :name "mast"
+                    :x -700 :y 0 :z 100 :w 200 :h 800})
+      (cad-feature {:id "wheel" :kind :revolve :order 2 :name "wheel"
+                    :x 600 :y -200 :z 0 :r 80 :h 50})]})
+
+   (product
+    {:id "prod.bearing-6205"
+     :name "Deep groove ball bearing 6205"
+     :unspsc "31171500"
+     :sector :manufacturing-components
+     :gltf-ref "asset://unspsc/31/bearing-6205.glb"
+     :physics {:mass-kg 0.13 :bbox-mm [52 52 15] :density-g-cm3 7.8
+               :material-class :steel}
+     :components
+     [(component {:id "part.inner" :name "Inner race" :unspsc "31171500"
+                  :qty 1 :mass-kg 0.04 :material :steel :role :part})
+      (component {:id "part.outer" :name "Outer race" :unspsc "31171500"
+                  :qty 1 :mass-kg 0.05 :material :steel :role :part})
+      (component {:id "part.balls" :name "Steel balls" :unspsc "31171500"
+                  :qty 9 :mass-kg 0.003 :material :steel :role :part})
+      (component {:id "part.cage" :name "Cage" :unspsc "31171500"
+                  :qty 1 :mass-kg 0.01 :material :steel :role :part})
+      (component {:id "part.seal" :name "Rubber seal" :unspsc "31171500"
+                  :qty 2 :mass-kg 0.002 :material :polymer :role :part})]
+     :features
+     [(cad-feature {:id "outer" :kind :revolve :order 0 :name "outer"
+                    :x 0 :y 0 :z 0 :r 26 :h 15})
+      (cad-feature {:id "inner" :kind :revolve :order 1 :name "inner"
+                    :x 0 :y 0 :z 0 :r 12 :h 15})
+      (cad-feature {:id "ball" :kind :boss :order 2 :name "ball-ring"
+                    :x 18 :y 0 :z 7 :w 8 :h 8})]})
+
+   (product
+    {:id "prod.hvac-duct-section"
+     :name "Galvanized HVAC duct section"
+     :unspsc "40101500"
+     :sector :hvac
+     :gltf-ref "asset://unspsc/40/hvac-duct-section.glb"
+     :physics {:mass-kg 12.0 :bbox-mm [1200 400 400] :density-g-cm3 0.4
+               :material-class :steel}
+     :components
+     [(component {:id "part.sheet" :name "Galv sheet" :unspsc "30103600"
+                  :qty 1 :mass-kg 9 :material :steel :role :material})
+      (component {:id "part.flange-d" :name "Duct flanges" :unspsc "40101500"
+                  :qty 2 :mass-kg 1.2 :material :steel :role :part})
+      (component {:id "part.gasket" :name "Neoprene gasket" :unspsc "31200000"
+                  :qty 2 :mass-kg 0.15 :material :rubber :role :material})
+      (component {:id "part.screws" :name "Self-tap screws" :unspsc "31161500"
+                  :qty 24 :mass-kg 0.01 :material :steel :role :part})]
+     :features
+     [(cad-feature {:id "duct" :kind :extrude :order 0 :name "duct"
+                    :x 0 :y 0 :z 0 :w 1200 :h 400})
+      (cad-feature {:id "flange-a" :kind :boss :order 1 :name "flange-a"
+                    :x -600 :y 0 :z 0 :w 20 :h 420})
+      (cad-feature {:id "flange-b" :kind :boss :order 2 :name "flange-b"
+                    :x 600 :y 0 :z 0 :w 20 :h 420})]})])
 
 (def curated-blueprint-segments
   "Open-business curated UNSPSC segments that should each have ≥1 twin."
@@ -996,6 +1280,11 @@
   blueprint repos exist). Structures / electronic components / lab / medical /
   office / furniture."
   ["30" "32" "41" "42" "44" "56"])
+
+(def wave3-goods-segments
+  "Third-wave goods segments: chemicals / fuels / construction machinery /
+  material handling / manufacturing components / HVAC distribution."
+  ["12" "15" "22" "24" "31" "40"])
 
 ;; Soft depth targets for scorecard (catalog densification goals).
 (def ^:private target-mean-sbom-lines 3.5)
@@ -1086,13 +1375,19 @@
          depth-cad (when (pos? mean-cad)
                      (clamp01 (/ mean-cad target-mean-cad-features)))
          wave2 (double (:wave2-goods-coverage uob 0))
+         wave3 (double (:wave3-goods-coverage uob 0))
+         dens (double (:curated-blueprint-density uob 0))
+         ;; Density soft gate: 1.0 at ≥3 twins per curated blueprint segment.
+         dens-score (when (pos? dens) (clamp01 (/ dens 3.0)))
          dims (cond-> {:product-twin (double (:product-twin-coverage uob 0))
                        :high-confidence (double (:product-twin-high-confidence-coverage uob 0))
                        :mean-confidence (double (:product-twin-mean-confidence uob 0))
                        :twin-segment (double (:twin-segment-coverage uob 0))
                        :operator-ready (double (:operator-ready-coverage uob 0))
                        :registry-known (double (:registry-known-coverage uob 0))
-                       :wave2-goods wave2}
+                       :wave2-goods wave2
+                       :wave3-goods wave3}
+                dens-score (assoc :curated-density dens-score)
                 (number? brand-owner-coverage)
                 (assoc :brand-owner (double brand-owner-coverage))
                 depth-sbom (assoc :twin-depth-sbom depth-sbom)
@@ -1127,6 +1422,8 @@
         curated-hits (filterv seg-set curated)
         wave2 wave2-goods-segments
         wave2-hits (filterv seg-set wave2)
+        wave3 wave3-goods-segments
+        wave3-hits (filterv seg-set wave3)
         complete? (fn [p]
                     (and (seq (:product/sbom p))
                          (seq (:product/cad-features p))
@@ -1175,6 +1472,13 @@
      :wave2-goods-coverage
      (if (seq wave2)
        (double (/ (count wave2-hits) (count wave2)))
+       0.0)
+     :wave3-goods-segments wave3
+     :wave3-goods-hits wave3-hits
+     :wave3-goods-missing (filterv (complement seg-set) wave3)
+     :wave3-goods-coverage
+     (if (seq wave3)
+       (double (/ (count wave3-hits) (count wave3)))
        0.0)
      :commodities (into (sorted-set) (map :product/unspsc catalog))
      :ids (mapv :product/id catalog)}))
