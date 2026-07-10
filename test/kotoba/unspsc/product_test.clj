@@ -63,3 +63,12 @@
     (is (every? :vol s))
     (is (= (count (:product/cad-features p))
            (reduce + 0 (map :qty s))))))
+
+(deftest coverage-entities-carry-brand-owners
+  (let [ents (prod/coverage-entities)]
+    (is (= (count prod/catalog) (count ents)))
+    (is (every? :product/brand-owner ents))
+    (is (every? #(re-find #"^org\.corp\.jp\.unspsc-twin-" (:product/brand-owner %)) ents))
+    (is (pos? (:product-twins (prod/segment-twin-stats "43"))))
+    (is (true? (:has-sbom-twins? (prod/segment-twin-stats "43"))))
+    (is (true? (:has-cad-twins? (prod/segment-twin-stats "10"))))))
