@@ -4,7 +4,7 @@
 
 (deftest catalog-has-sbom-cad-physics-3d
   (let [sum (prod/catalog-summary)]
-    (is (>= (:products sum) 50))
+    (is (>= (:products sum) 61))
     (is (= (:products sum) (:with-sbom sum) (:with-cad sum) (:with-physics sum)
            (:with-full-twin sum)))
     (is (pos? (:with-gltf-ref sum)))
@@ -12,24 +12,24 @@
         "all curated open-business segments 10/27/39/43/73 have twins")
     (is (empty? (:curated-blueprint-missing sum)))
     (is (= #{"10" "27" "39" "43" "73"} (set (:curated-blueprint-hits sum))))
-    (is (>= (:curated-blueprint-density sum) 4.0)
-        "densify-4: ≥4 twins per curated blueprint segment")
+    (is (>= (:curated-blueprint-density sum) 5.0)
+        "densify-5: ≥5 twins per curated blueprint segment")
     (is (== 1.0 (:seed-traffic-coverage sum))
         "seed-traffic segments 25/26/50/51/53 all have twins")
     (is (empty? (:seed-traffic-missing sum)))
-    (is (== 1.0 (:wave2-goods-coverage sum))
-        "wave-2 goods segments 30/32/41/42/44/56 all have twins")
+    (is (== 1.0 (:wave2-goods-coverage sum)))
     (is (empty? (:wave2-goods-missing sum)))
-    (is (== 1.0 (:wave3-goods-coverage sum))
-        "wave-3 goods segments 12/15/22/24/31/40 all have twins")
+    (is (== 1.0 (:wave3-goods-coverage sum)))
     (is (empty? (:wave3-goods-missing sum)))
-    (is (== 1.0 (:wave4-goods-coverage sum))
-        "wave-4 goods segments 11/14/21/23/46/52/60 all have twins")
+    (is (== 1.0 (:wave4-goods-coverage sum)))
     (is (empty? (:wave4-goods-missing sum)))
+    (is (== 1.0 (:wave5-goods-coverage sum))
+        "wave-5 completes remaining goods 13/20/45/47/48/55")
+    (is (empty? (:wave5-goods-missing sum)))
     (is (>= (:mean-sbom-lines sum) 3.5))
     (is (>= (:mean-cad-features sum) 2.4))
-    (is (>= (:segment-count sum) 29))
-    (is (some #{"43" "11" "14" "21" "23" "46" "52" "60"} (:segments sum)))))
+    (is (>= (:segment-count sum) 35))
+    (is (some #{"43" "13" "20" "45" "47" "48" "55"} (:segments sum)))))
 
 (deftest smartphone-twin-roundtrip-projectors
   (let [p (prod/by-id "prod.smartphone-flagship")]
@@ -132,7 +132,8 @@
                :wave2-goods-coverage 1.0
                :wave3-goods-coverage 1.0
                :wave4-goods-coverage 1.0
-               :curated-blueprint-density 4.0
+               :wave5-goods-coverage 1.0
+               :curated-blueprint-density 5.0
                :product-twin-mean-sbom-lines 4.2
                :product-twin-mean-cad-features 3.1
                :product-twin-by-match {:id 16 :alias 4 :commodity 0 :segment 0}}
@@ -143,5 +144,6 @@
       (is (contains? (:dims sc) :wave2-goods))
       (is (contains? (:dims sc) :wave3-goods))
       (is (contains? (:dims sc) :wave4-goods))
+      (is (contains? (:dims sc) :wave5-goods))
       (is (contains? (:dims sc) :curated-density))
       (is (contains? (:dims sc) :twin-depth-sbom)))))
