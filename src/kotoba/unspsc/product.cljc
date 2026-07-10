@@ -1264,7 +1264,324 @@
       (cad-feature {:id "flange-a" :kind :boss :order 1 :name "flange-a"
                     :x -600 :y 0 :z 0 :w 20 :h 420})
       (cad-feature {:id "flange-b" :kind :boss :order 2 :name "flange-b"
-                    :x 600 :y 0 :z 0 :w 20 :h 420})]})])
+                    :x 600 :y 0 :z 0 :w 20 :h 420})]})
+
+   ;; ── densify-4 curated :blueprint (target density ≥4) ──
+   (product
+    {:id "prod.lora-gateway"
+     :name "Outdoor LoRaWAN gateway"
+     :unspsc "43222612"
+     :brand "demo-iot"
+     :sector :electronics
+     :gltf-ref "asset://unspsc/43/lora-gateway.glb"
+     :physics {:mass-kg 1.8 :bbox-mm [220 180 90] :density-g-cm3 1.4
+               :material-class :electronics}
+     :components
+     [(component {:id "part.lora-ic" :name "LoRa baseband" :unspsc "32101604"
+                  :qty 1 :mass-kg 0.005 :material :silicon :role :part})
+      (component {:id "part.ant-lora" :name "Omni antenna" :unspsc "43191500"
+                  :qty 1 :mass-kg 0.15 :material :electronics :role :part})
+      (component {:id "part.poe" :name "PoE injector board" :unspsc "32101500"
+                  :qty 1 :mass-kg 0.08 :material :fr4 :role :assembly})
+      (component {:id "part.ip67" :name "IP67 enclosure" :unspsc "24112400"
+                  :qty 1 :mass-kg 0.6 :material :polymer :role :assembly})
+      (component {:id "sw.lora" :name "Gateway firmware" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "box" :kind :extrude :order 0 :name "enclosure"
+                    :x 0 :y 0 :z 0 :w 220 :h 90})
+      (cad-feature {:id "ant" :kind :revolve :order 1 :name "antenna"
+                    :x 0 :y 0 :z 90 :r 8 :h 200})
+      (cad-feature {:id "bracket" :kind :boss :order 2 :name "mount"
+                    :x 0 :y -90 :z 40 :w 80 :h 20})]})
+
+   (product
+    {:id "prod.impact-driver-kit"
+     :name "Cordless impact driver kit"
+     :unspsc "27112712"
+     :sector :tools
+     :gltf-ref "asset://unspsc/27/impact-driver-kit.glb"
+     :physics {:mass-kg 2.1 :bbox-mm [280 220 100] :density-g-cm3 1.8
+               :material-class :mixed}
+     :components
+     [(component {:id "part.driver" :name "Impact driver" :unspsc "27112700"
+                  :qty 1 :mass-kg 1.1 :material :steel :role :assembly})
+      (component {:id "part.batt-id" :name "18V battery" :unspsc "26111710"
+                  :qty 2 :mass-kg 0.35 :material :li-ion :role :part})
+      (component {:id "part.charger" :name "Charger" :unspsc "39121000"
+                  :qty 1 :mass-kg 0.25 :material :electronics :role :part})
+      (component {:id "part.case-id" :name "Kit case" :unspsc "24120000"
+                  :qty 1 :mass-kg 0.4 :material :polymer :role :packaging})
+      (component {:id "sw.batt-m" :name "BMS firmware" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "case" :kind :extrude :order 0 :name "case"
+                    :x 0 :y 0 :z 0 :w 280 :h 100})
+      (cad-feature {:id "driver" :kind :boss :order 1 :name "driver"
+                    :x -40 :y 0 :z 100 :w 180 :h 50})
+      (cad-feature {:id "batt" :kind :revolve :order 2 :name "battery"
+                    :x 80 :y 0 :z 50 :r 30 :h 60})]})
+
+   (product
+    {:id "prod.led-highbay"
+     :name "LED high-bay luminaire 150W"
+     :unspsc "39111512"
+     :sector :electrical
+     :gltf-ref "asset://unspsc/39/led-highbay.glb"
+     :physics {:mass-kg 3.2 :bbox-mm [350 350 120] :density-g-cm3 1.5
+               :material-class :aluminum}
+     :components
+     [(component {:id "part.leds" :name "LED modules" :unspsc "39111500"
+                  :qty 4 :mass-kg 0.15 :material :electronics :role :part})
+      (component {:id "part.driver-hb" :name "LED driver" :unspsc "39121000"
+                  :qty 1 :mass-kg 0.4 :material :electronics :role :part})
+      (component {:id "part.heatsink-hb" :name "Heatsink body" :unspsc "40101800"
+                  :qty 1 :mass-kg 1.8 :material :aluminum :role :assembly})
+      (component {:id "part.lens" :name "Optics lens" :unspsc "39111500"
+                  :qty 1 :mass-kg 0.2 :material :polymer :role :part})
+      (component {:id "sw.dim" :name "DALI firmware" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "body" :kind :revolve :order 0 :name "body"
+                    :x 0 :y 0 :z 0 :r 160 :h 80})
+      (cad-feature {:id "lens" :kind :boss :order 1 :name "lens"
+                    :x 0 :y 0 :z 80 :w 300 :h 15})
+      (cad-feature {:id "hook" :kind :revolve :order 2 :name "hang-hook"
+                    :x 0 :y 0 :z -20 :r 15 :h 40})]})
+
+   (product
+    {:id "prod.pollinator-nest-box"
+     :name "Solitary bee nest box kit"
+     :unspsc "10151512"
+     :sector :agriculture
+     :gltf-ref "asset://unspsc/10/pollinator-nest-box.glb"
+     :physics {:mass-kg 1.4 :bbox-mm [300 200 200] :density-g-cm3 0.5
+               :material-class :wood}
+     :components
+     [(component {:id "part.box-wood" :name "Cedar box" :unspsc "11120000"
+                  :qty 1 :mass-kg 0.9 :material :wood :role :assembly})
+      (component {:id "part.tubes" :name "Nest tubes" :unspsc "11120000"
+                  :qty 40 :mass-kg 0.005 :material :paper :role :part})
+      (component {:id "part.roof" :name "Metal roof" :unspsc "30103600"
+                  :qty 1 :mass-kg 0.2 :material :steel :role :part})
+      (component {:id "part.mount-p" :name "Mount bracket" :unspsc "31161700"
+                  :qty 1 :mass-kg 0.1 :material :steel :role :part})]
+     :features
+     [(cad-feature {:id "box" :kind :extrude :order 0 :name "box"
+                    :x 0 :y 0 :z 0 :w 300 :h 200})
+      (cad-feature {:id "roof" :kind :boss :order 1 :name "roof"
+                    :x 0 :y 0 :z 200 :w 320 :h 20})
+      (cad-feature {:id "tubes" :kind :revolve :order 2 :name "tube-bundle"
+                    :x 0 :y 50 :z 50 :r 60 :h 150})]})
+
+   (product
+    {:id "prod.vibration-analyzer"
+     :name "Portable vibration analyzer"
+     :unspsc "73101512"
+     :sector :industrial-services
+     :gltf-ref "asset://unspsc/73/vibration-analyzer.glb"
+     :physics {:mass-kg 1.6 :bbox-mm [250 160 50] :density-g-cm3 1.3
+               :material-class :electronics}
+     :components
+     [(component {:id "part.accel" :name "Accelerometer probe" :unspsc "41111900"
+                  :qty 2 :mass-kg 0.08 :material :electronics :role :part})
+      (component {:id "part.daq" :name "DAQ unit" :unspsc "43211500"
+                  :qty 1 :mass-kg 0.7 :material :electronics :role :assembly})
+      (component {:id "part.cable-v" :name "Sensor cables" :unspsc "26121600"
+                  :qty 2 :mass-kg 0.1 :material :copper :role :part})
+      (component {:id "part.case-v" :name "Soft case" :unspsc "24120000"
+                  :qty 1 :mass-kg 0.25 :material :polymer :role :packaging})
+      (component {:id "sw.vib" :name "FFT analysis app" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "unit" :kind :extrude :order 0 :name "unit"
+                    :x 0 :y 0 :z 0 :w 250 :h 50})
+      (cad-feature {:id "probe" :kind :revolve :order 1 :name "probe"
+                    :x 120 :y 0 :z 50 :r 12 :h 80})
+      (cad-feature {:id "screen" :kind :boss :order 2 :name "screen"
+                    :x 0 :y 0 :z 50 :w 120 :h 3})]})
+
+   ;; ── wave-4 goods segments (registry breadth, stay :spec) ──
+   (product
+    {:id "prod.cotton-bale"
+     :name "Raw cotton bale"
+     :unspsc "11151500"
+     :sector :materials
+     :gltf-ref "asset://unspsc/11/cotton-bale.glb"
+     :physics {:mass-kg 220.0 :bbox-mm [1400 700 700] :density-g-cm3 0.3
+               :material-class :textile}
+     :components
+     [(component {:id "part.lint" :name "Cotton lint" :unspsc "11151500"
+                  :qty 1 :mass-kg 210 :material :cotton :role :material})
+      (component {:id "part.wrap" :name "Bale wrap" :unspsc "24121500"
+                  :qty 1 :mass-kg 2 :material :polymer :role :packaging})
+      (component {:id "part.wires" :name "Bale wires" :unspsc "31161700"
+                  :qty 6 :mass-kg 0.5 :material :steel :role :part})
+      (component {:id "part.tag-c" :name "Grade tag" :unspsc "14111800"
+                  :qty 1 :mass-kg 0.01 :material :paper :role :part})]
+     :features
+     [(cad-feature {:id "bale" :kind :extrude :order 0 :name "bale"
+                    :x 0 :y 0 :z 0 :w 1400 :h 700})
+      (cad-feature {:id "wire" :kind :boss :order 1 :name "wires"
+                    :x 0 :y 0 :z 350 :w 1400 :h 10})
+      (cad-feature {:id "tag" :kind :boss :order 2 :name "tag"
+                    :x 600 :y 0 :z 700 :w 80 :h 5})]})
+
+   (product
+    {:id "prod.copy-paper-ream"
+     :name "A4 copy paper ream 500 sheets"
+     :unspsc "14111500"
+     :sector :paper
+     :gltf-ref "asset://unspsc/14/copy-paper-ream.glb"
+     :physics {:mass-kg 2.5 :bbox-mm [300 210 50] :density-g-cm3 0.8
+               :material-class :paper}
+     :components
+     [(component {:id "part.sheets" :name "A4 sheets" :unspsc "14111500"
+                  :qty 500 :mass-kg 0.005 :material :paper :role :material})
+      (component {:id "part.wrap-p" :name "Ream wrap" :unspsc "24121500"
+                  :qty 1 :mass-kg 0.05 :material :paper :role :packaging})
+      (component {:id "part.carton-p" :name "Carton sleeve" :unspsc "24121500"
+                  :qty 1 :mass-kg 0.1 :material :paper :role :packaging})
+      (component {:id "part.label-p" :name "Grade label" :unspsc "14111800"
+                  :qty 1 :mass-kg 0.005 :material :paper :role :part})]
+     :features
+     [(cad-feature {:id "ream" :kind :extrude :order 0 :name "ream"
+                    :x 0 :y 0 :z 0 :w 300 :h 50})
+      (cad-feature {:id "wrap" :kind :boss :order 1 :name "wrap"
+                    :x 0 :y 0 :z 25 :w 300 :h 2})
+      (cad-feature {:id "label" :kind :boss :order 2 :name "label"
+                    :x 100 :y 0 :z 52 :w 80 :h 1})]})
+
+   (product
+    {:id "prod.tractor-pto-shaft"
+     :name "Tractor PTO drive shaft"
+     :unspsc "21101500"
+     :sector :farming
+     :gltf-ref "asset://unspsc/21/tractor-pto-shaft.glb"
+     :physics {:mass-kg 18.0 :bbox-mm [1200 150 150] :density-g-cm3 7.5
+               :material-class :steel}
+     :components
+     [(component {:id "part.tube" :name "Telescopic tubes" :unspsc "21101500"
+                  :qty 2 :mass-kg 6 :material :steel :role :part})
+      (component {:id "part.ujoint" :name "U-joints" :unspsc "31161700"
+                  :qty 2 :mass-kg 1.5 :material :steel :role :part})
+      (component {:id "part.yoke" :name "End yokes" :unspsc "21101500"
+                  :qty 2 :mass-kg 2 :material :steel :role :part})
+      (component {:id "part.guard" :name "Safety guard" :unspsc "24112400"
+                  :qty 1 :mass-kg 1.2 :material :polymer :role :part})]
+     :features
+     [(cad-feature {:id "shaft" :kind :revolve :order 0 :name "shaft"
+                    :x 0 :y 0 :z 0 :r 40 :h 1200})
+      (cad-feature {:id "yoke" :kind :boss :order 1 :name "yoke"
+                    :x 0 :y 0 :z 0 :w 120 :h 80})
+      (cad-feature {:id "guard" :kind :revolve :order 2 :name "guard"
+                    :x 0 :y 0 :z 200 :r 70 :h 800})]})
+
+   (product
+    {:id "prod.cnc-lathe-chuck"
+     :name "CNC lathe 3-jaw chuck 200mm"
+     :unspsc "23151500"
+     :sector :industrial-machinery
+     :gltf-ref "asset://unspsc/23/cnc-lathe-chuck.glb"
+     :physics {:mass-kg 22.0 :bbox-mm [220 220 120] :density-g-cm3 7.5
+               :material-class :steel}
+     :components
+     [(component {:id "part.body-ch" :name "Chuck body" :unspsc "23151500"
+                  :qty 1 :mass-kg 14 :material :steel :role :assembly})
+      (component {:id "part.jaws-ch" :name "Soft jaws" :unspsc "23151500"
+                  :qty 3 :mass-kg 1.2 :material :steel :role :part})
+      (component {:id "part.scroll" :name "Scroll plate" :unspsc "23151500"
+                  :qty 1 :mass-kg 3 :material :steel :role :part})
+      (component {:id "part.bolts" :name "Mount bolts" :unspsc "31161500"
+                  :qty 6 :mass-kg 0.05 :material :steel :role :part})]
+     :features
+     [(cad-feature {:id "body" :kind :revolve :order 0 :name "body"
+                    :x 0 :y 0 :z 0 :r 100 :h 100})
+      (cad-feature {:id "jaw" :kind :boss :order 1 :name "jaw"
+                    :x 60 :y 0 :z 50 :w 40 :h 40})
+      (cad-feature {:id "bore" :kind :revolve :order 2 :name "bore"
+                    :x 0 :y 0 :z 0 :r 30 :h 120})]})
+
+   (product
+    {:id "prod.access-control-reader"
+     :name "RFID access control reader"
+     :unspsc "46171600"
+     :sector :security
+     :gltf-ref "asset://unspsc/46/access-control-reader.glb"
+     :physics {:mass-kg 0.35 :bbox-mm [120 80 25] :density-g-cm3 1.2
+               :material-class :electronics}
+     :components
+     [(component {:id "part.rfid" :name "RFID module" :unspsc "32101604"
+                  :qty 1 :mass-kg 0.02 :material :electronics :role :part})
+      (component {:id "part.mcu-ac" :name "Reader MCU" :unspsc "32101500"
+                  :qty 1 :mass-kg 0.03 :material :fr4 :role :assembly})
+      (component {:id "part.shell-ac" :name "Weather shell" :unspsc "24112400"
+                  :qty 1 :mass-kg 0.15 :material :polymer :role :assembly})
+      (component {:id "part.relay" :name "Door relay" :unspsc "39121500"
+                  :qty 1 :mass-kg 0.04 :material :electronics :role :part})
+      (component {:id "sw.acs" :name "ACS firmware" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "body" :kind :extrude :order 0 :name "body"
+                    :x 0 :y 0 :z 0 :w 120 :h 25})
+      (cad-feature {:id "pad" :kind :boss :order 1 :name "pad"
+                    :x 0 :y 0 :z 25 :w 80 :h 3})
+      (cad-feature {:id "led" :kind :boss :order 2 :name "status-led"
+                    :x 40 :y 20 :z 28 :w 10 :h 2})]})
+
+   (product
+    {:id "prod.robot-vacuum"
+     :name "Robot vacuum cleaner"
+     :unspsc "52141500"
+     :sector :appliances
+     :gltf-ref "asset://unspsc/52/robot-vacuum.glb"
+     :physics {:mass-kg 3.5 :bbox-mm [350 350 100] :density-g-cm3 0.9
+               :material-class :electronics}
+     :components
+     [(component {:id "part.motor-v" :name "Brushless motor" :unspsc "26101500"
+                  :qty 1 :mass-kg 0.4 :material :steel :role :part})
+      (component {:id "part.batt-v" :name "Li-ion pack" :unspsc "26111710"
+                  :qty 1 :mass-kg 0.6 :material :li-ion :role :part})
+      (component {:id "part.lidar" :name "LiDAR module" :unspsc "41111900"
+                  :qty 1 :mass-kg 0.15 :material :electronics :role :part})
+      (component {:id "part.shell-v" :name "ABS shell" :unspsc "24112400"
+                  :qty 1 :mass-kg 0.8 :material :polymer :role :assembly})
+      (component {:id "sw.nav" :name "Nav firmware" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "body" :kind :revolve :order 0 :name "body"
+                    :x 0 :y 0 :z 0 :r 170 :h 90})
+      (cad-feature {:id "lidar" :kind :boss :order 1 :name "lidar"
+                    :x 0 :y 0 :z 90 :w 60 :h 20})
+      (cad-feature {:id "wheel" :kind :revolve :order 2 :name "drive-wheel"
+                    :x 100 :y 0 :z 20 :r 30 :h 20})]})
+
+   (product
+    {:id "prod.stem-robot-kit"
+     :name "STEM education robot kit"
+     :unspsc "60141000"
+     :sector :education
+     :gltf-ref "asset://unspsc/60/stem-robot-kit.glb"
+     :physics {:mass-kg 1.2 :bbox-mm [300 200 80] :density-g-cm3 0.8
+               :material-class :mixed}
+     :components
+     [(component {:id "part.board" :name "Controller board" :unspsc "32101500"
+                  :qty 1 :mass-kg 0.05 :material :fr4 :role :assembly})
+      (component {:id "part.servos" :name "Micro servos" :unspsc "26101500"
+                  :qty 4 :mass-kg 0.04 :material :electronics :role :part})
+      (component {:id "part.chassis-r" :name "Chassis kit" :unspsc "24112400"
+                  :qty 1 :mass-kg 0.3 :material :polymer :role :assembly})
+      (component {:id "part.manual" :name "Lesson guide" :unspsc "55101500"
+                  :qty 1 :mass-kg 0.1 :material :paper :role :part})
+      (component {:id "sw.stem" :name "Block coding IDE" :unspsc "43230000"
+                  :qty 1 :role :software})]
+     :features
+     [(cad-feature {:id "case" :kind :extrude :order 0 :name "kit-case"
+                    :x 0 :y 0 :z 0 :w 300 :h 80})
+      (cad-feature {:id "chassis" :kind :boss :order 1 :name "chassis"
+                    :x 0 :y 0 :z 80 :w 150 :h 40})
+      (cad-feature {:id "wheel-r" :kind :revolve :order 2 :name "wheel"
+                    :x 60 :y 0 :z 40 :r 25 :h 15})]})])
 
 (def curated-blueprint-segments
   "Open-business curated UNSPSC segments that should each have ≥1 twin."
@@ -1286,9 +1603,15 @@
   material handling / manufacturing components / HVAC distribution."
   ["12" "15" "22" "24" "31" "40"])
 
+(def wave4-goods-segments
+  "Fourth-wave goods segments: textile materials / paper / farming machinery /
+  industrial machinery / security / domestic appliances / education kits."
+  ["11" "14" "21" "23" "46" "52" "60"])
+
 ;; Soft depth targets for scorecard (catalog densification goals).
 (def ^:private target-mean-sbom-lines 3.5)
 (def ^:private target-mean-cad-features 2.4)
+(def ^:private target-curated-density 4.0)
 
 (defn coverage-entities
   "Uchiwake-shaped entity vector for bulk import: every twin as a product
@@ -1376,9 +1699,10 @@
                      (clamp01 (/ mean-cad target-mean-cad-features)))
          wave2 (double (:wave2-goods-coverage uob 0))
          wave3 (double (:wave3-goods-coverage uob 0))
+         wave4 (double (:wave4-goods-coverage uob 0))
          dens (double (:curated-blueprint-density uob 0))
-         ;; Density soft gate: 1.0 at ≥3 twins per curated blueprint segment.
-         dens-score (when (pos? dens) (clamp01 (/ dens 3.0)))
+         ;; Density soft gate: 1.0 at ≥ target-curated-density twins/segment.
+         dens-score (when (pos? dens) (clamp01 (/ dens target-curated-density)))
          dims (cond-> {:product-twin (double (:product-twin-coverage uob 0))
                        :high-confidence (double (:product-twin-high-confidence-coverage uob 0))
                        :mean-confidence (double (:product-twin-mean-confidence uob 0))
@@ -1386,7 +1710,8 @@
                        :operator-ready (double (:operator-ready-coverage uob 0))
                        :registry-known (double (:registry-known-coverage uob 0))
                        :wave2-goods wave2
-                       :wave3-goods wave3}
+                       :wave3-goods wave3
+                       :wave4-goods wave4}
                 dens-score (assoc :curated-density dens-score)
                 (number? brand-owner-coverage)
                 (assoc :brand-owner (double brand-owner-coverage))
@@ -1424,6 +1749,8 @@
         wave2-hits (filterv seg-set wave2)
         wave3 wave3-goods-segments
         wave3-hits (filterv seg-set wave3)
+        wave4 wave4-goods-segments
+        wave4-hits (filterv seg-set wave4)
         complete? (fn [p]
                     (and (seq (:product/sbom p))
                          (seq (:product/cad-features p))
@@ -1479,6 +1806,13 @@
      :wave3-goods-coverage
      (if (seq wave3)
        (double (/ (count wave3-hits) (count wave3)))
+       0.0)
+     :wave4-goods-segments wave4
+     :wave4-goods-hits wave4-hits
+     :wave4-goods-missing (filterv (complement seg-set) wave4)
+     :wave4-goods-coverage
+     (if (seq wave4)
+       (double (/ (count wave4-hits) (count wave4)))
        0.0)
      :commodities (into (sorted-set) (map :product/unspsc catalog))
      :ids (mapv :product/id catalog)}))
