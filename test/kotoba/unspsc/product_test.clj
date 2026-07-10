@@ -75,3 +75,25 @@
     (is (pos? (:product-twins (prod/segment-twin-stats "43"))))
     (is (true? (:has-sbom-twins? (prod/segment-twin-stats "43"))))
     (is (true? (:has-cad-twins? (prod/segment-twin-stats "10"))))))
+
+(deftest resolve-twin-match-order
+  (testing "exact id"
+    (let [r (prod/resolve-twin "prod.smartphone-flagship")]
+      (is (= :id (:match r)))
+      (is (== 1.0 (:confidence r)))
+      (is (= "prod.smartphone-flagship" (get-in r [:twin :product/id])))))
+  (testing "commodity match for seed product id not in catalog"
+    (let [r (prod/resolve-twin {:product/id "gtin.05449000000996"
+                                :product/unspsc "50202301"})]
+      (is (= :commodity (:match r)))
+      (is (== 0.8 (:confidence r)))
+      (is (= "50202301" (get-in r [:twin :product/unspsc])))))
+  (testing "segment fallback"
+    (let [r (prod/resolve-twin {:product/id "prod.5g-radio"
+                                :product/unspsc "43222609"})]
+      (is (#{:commodity :segment} (:match r)))
+      (is (true? (boolean (:twin r))))
+      (is (= "43" (get-in r [:twin :product/unspsc-segment])))))
+  (testing "unknown"
+    (is (nil? (prod/resolve-twin {:product/id "prod.unknown"
+                                  :product/unspsc "99999999"})))))
