@@ -608,6 +608,36 @@
       :else
       (filterv #(= digits (:product/unspsc %)) catalog))))
 
+(defn resolve-twin
+  "Best-effort twin for a product map, id string, or commodity code.
+
+  Match order:
+  1. exact `:product/id`
+  2. exact 8-digit commodity (`:product/unspsc`)
+  3. 2-digit segment (first twin in catalog for that segment)
+
+  Returns `{:twin … :match :id|:commodity|:segment :confidence 1.0|0.8|0.5}`
+  or nil when nothing matches."
+  [product-or-id]
+  (let [m (cond (map? product-or-id) product-or-id
+                (string? product-or-id) {:product/id product-or-id}
+                :else nil)
+        id (some-> m :product/id str)
+        code (or (some-> m :product/unspsc str not-empty)
+                 (some-> m :unspsc str not-empty)
+                 (when (and (string? product-or-id)
+                            (re-matches #"\d{2,}" product-or-id))
+                   product-or-id))
+        seg (or (unspsc-segment code)
+                (some-> m :product/unspsc-segment str))]
+    (or (when-let [t (and id (by-id id))]
+          {:twin t :match :id :confidence 1.0})
+        (when-let [t (and code (>= (count (str/replace (str code) #"[^0-9]" "")) 8)
+                          (first (by-unspsc code)))]
+          {:twin t :match :commodity :confidence 0.8})
+        (when-let [t (and seg (first (by-segment seg)))]
+          {:twin t :match :segment :confidence 0.5}))))
+
 (defn catalog-summary
   "Operator-facing maturity of the twin catalog.
 
