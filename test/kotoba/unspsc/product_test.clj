@@ -4,7 +4,7 @@
 
 (deftest catalog-has-sbom-cad-physics-3d
   (let [sum (prod/catalog-summary)]
-    (is (>= (:products sum) 8))
+    (is (>= (:products sum) 11))
     (is (= (:products sum) (:with-sbom sum) (:with-cad sum) (:with-physics sum)
            (:with-full-twin sum)))
     (is (pos? (:with-gltf-ref sum)))
@@ -12,7 +12,10 @@
         "all curated open-business segments 10/27/39/43/73 have twins")
     (is (empty? (:curated-blueprint-missing sum)))
     (is (= #{"10" "27" "39" "43" "73"} (set (:curated-blueprint-hits sum))))
-    (is (some #{"43" "25" "26" "27" "10" "39" "73"} (:segments sum)))))
+    (is (== 1.0 (:seed-traffic-coverage sum))
+        "seed-traffic segments 25/26/50/51/53 all have twins")
+    (is (empty? (:seed-traffic-missing sum)))
+    (is (some #{"43" "25" "26" "27" "10" "39" "73" "50" "51" "53"} (:segments sum)))))
 
 (deftest smartphone-twin-roundtrip-projectors
   (let [p (prod/by-id "prod.smartphone-flagship")]

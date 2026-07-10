@@ -502,11 +502,83 @@
      [(cad-feature {:id "case" :kind :extrude :order 0 :name "case"
                     :x 0 :y 0 :z 0 :w 500 :h 120})
       (cad-feature {:id "logger" :kind :boss :order 1 :name "logger"
-                    :x -80 :y 0 :z 120 :w 100 :h 30})]})])
+                    :x -80 :y 0 :z 120 :w 100 :h 30})]})
+
+   ;; High-traffic :spec segments present in uchiwake seed / fixture graphs
+   ;; (food 50, pharma 51, apparel 53) — SBOM/CAD twins so graph twin-segment
+   ;; coverage can reach 1.0 without promoting registry maturity tiers.
+   (product
+    {:id "prod.beverage-can-330"
+     :name "Carbonated soft drink 330ml can"
+     :unspsc "50202301"
+     :brand "demo-cola"
+     :sector :food-beverage
+     :gltf-ref "asset://unspsc/50/beverage-can-330.glb"
+     :physics {:mass-kg 0.35 :bbox-mm [66 66 115] :density-g-cm3 1.0
+               :material-class :aluminum}
+     :components
+     [(component {:id "part.can-body" :name "Aluminum can body" :unspsc "24121500"
+                  :qty 1 :mass-kg 0.013 :material :aluminum :role :packaging})
+      (component {:id "part.syrup" :name "Beverage concentrate" :unspsc "50192400"
+                  :qty 1 :mass-kg 0.04 :material :agricultural :role :material})
+      (component {:id "part.end" :name "Stay-on tab end" :unspsc "24121500"
+                  :qty 1 :mass-kg 0.003 :material :aluminum :role :part})]
+     :features
+     [(cad-feature {:id "body" :kind :revolve :order 0 :name "can-body"
+                    :x 0 :y 0 :z 0 :r 33 :h 115})
+      (cad-feature {:id "tab" :kind :boss :order 1 :name "tab"
+                    :x 0 :y 0 :z 115 :w 20 :h 3})]})
+
+   (product
+    {:id "prod.paracetamol-500-twin"
+     :name "Paracetamol 500mg tablet pack"
+     :unspsc "51142003"
+     :sector :pharma
+     :gltf-ref "asset://unspsc/51/paracetamol-500.glb"
+     :physics {:mass-kg 0.02 :bbox-mm [90 50 15] :density-g-cm3 0.8
+               :material-class :pharma}
+     :components
+     [(component {:id "part.api" :name "Paracetamol API" :unspsc "51142000"
+                  :qty 20 :mass-kg 0.0005 :material :chemical :role :material})
+      (component {:id "part.blister" :name "Blister pack" :unspsc "24120000"
+                  :qty 1 :mass-kg 0.008 :material :polymer :role :packaging})
+      (component {:id "part.carton" :name "Carton" :unspsc "24121500"
+                  :qty 1 :mass-kg 0.01 :material :paper :role :packaging})]
+     :features
+     [(cad-feature {:id "carton" :kind :extrude :order 0 :name "carton"
+                    :x 0 :y 0 :z 0 :w 90 :h 15})
+      (cad-feature {:id "blister" :kind :boss :order 1 :name "blister"
+                    :x 0 :y 0 :z 8 :w 80 :h 5})]})
+
+   (product
+    {:id "prod.cotton-tee-basic"
+     :name "Basic cotton T-shirt"
+     :unspsc "53101500"
+     :sector :apparel
+     :gltf-ref "asset://unspsc/53/cotton-tee-basic.glb"
+     :physics {:mass-kg 0.18 :bbox-mm [300 200 20] :density-g-cm3 0.3
+               :material-class :textile}
+     :components
+     [(component {:id "part.fabric" :name "Cotton jersey" :unspsc "11151700"
+                  :qty 1 :mass-kg 0.15 :material :cotton :role :material})
+      (component {:id "part.thread" :name "Sewing thread" :unspsc "11151500"
+                  :qty 1 :mass-kg 0.005 :material :cotton :role :material})
+      (component {:id "part.label" :name "Care label" :unspsc "14111800"
+                  :qty 1 :mass-kg 0.001 :material :paper :role :part})]
+     :features
+     [(cad-feature {:id "body" :kind :extrude :order 0 :name "body-panel"
+                    :x 0 :y 0 :z 0 :w 300 :h 8})
+      (cad-feature {:id "sleeve" :kind :boss :order 1 :name "sleeve"
+                    :x 160 :y 0 :z 0 :w 80 :h 6})]})])
 
 (def curated-blueprint-segments
   "Open-business curated UNSPSC segments that should each have ≥1 twin."
   ["10" "27" "39" "43" "73"])
+
+(def seed-traffic-segments
+  "High-traffic :spec segments from uchiwake seed/fixture that should have twins
+  for graph twin-segment coverage (not registry maturity promotion)."
+  ["25" "26" "50" "51" "53"])
 
 (defn coverage-entities
   "Uchiwake-shaped entity vector for bulk import: every twin as a product
@@ -563,6 +635,14 @@
      :curated-blueprint-coverage
      (if (seq curated)
        (double (/ (count curated-hits) (count curated)))
+       0.0)
+     :seed-traffic-segments seed-traffic-segments
+     :seed-traffic-hits (filterv seg-set seed-traffic-segments)
+     :seed-traffic-missing (filterv (complement seg-set) seed-traffic-segments)
+     :seed-traffic-coverage
+     (if (seq seed-traffic-segments)
+       (double (/ (count (filter seg-set seed-traffic-segments))
+                  (count seed-traffic-segments)))
        0.0)
      :ids (mapv :product/id catalog)}))
 
