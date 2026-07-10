@@ -90,9 +90,10 @@
   "UNSPSC product digital twin.
 
   Required: :id :name :unspsc
-  Optional: :rev :brand :components :features :physics :gltf-ref :notes :sector"
-  [{:keys [id name unspsc rev brand components features physics gltf-ref notes sector]
-    :or {rev "A" components [] features []}}]
+  Optional: :rev :brand :components :features :physics :gltf-ref :notes :sector
+            :aliases (seed/GTIN product ids that should resolve as this twin)"
+  [{:keys [id name unspsc rev brand components features physics gltf-ref notes sector aliases]
+    :or {rev "A" components [] features [] aliases []}}]
   (let [seg (unspsc-segment unspsc)
         comps (mapv #(if (map? %) (if (:component/id %) % (component %)) %) components)
         feats (mapv #(if (map? %) (if (:feat/id %) % (cad-feature %)) %) features)
@@ -108,7 +109,8 @@
              :product/sbom comps
              :product/cad-features (vec (sort-by :feat/order feats))
              :product/physics phys
-             :product/open-business-id (when seg (str "cloud-itonami-unspsc-" seg))}
+             :product/open-business-id (when seg (str "cloud-itonami-unspsc-" seg))
+             :product/aliases (mapv str aliases)}
       brand (assoc :product/brand (str brand))
       sector (assoc :product/sector sector)
       gltf-ref (assoc :product/gltf-ref gltf-ref)
@@ -513,6 +515,7 @@
      :unspsc "50202301"
      :brand "demo-cola"
      :sector :food-beverage
+     :aliases ["gtin.05449000000996"]
      :gltf-ref "asset://unspsc/50/beverage-can-330.glb"
      :physics {:mass-kg 0.35 :bbox-mm [66 66 115] :density-g-cm3 1.0
                :material-class :aluminum}
@@ -534,6 +537,7 @@
      :name "Paracetamol 500mg tablet pack"
      :unspsc "51142003"
      :sector :pharma
+     :aliases ["prod.paracetamol-500"]
      :gltf-ref "asset://unspsc/51/paracetamol-500.glb"
      :physics {:mass-kg 0.02 :bbox-mm [90 50 15] :density-g-cm3 0.8
                :material-class :pharma}
@@ -659,6 +663,7 @@
      :name "Chocolate hazelnut spread jar"
      :unspsc "50161900"
      :sector :food-beverage
+     :aliases ["gtin.03017620422003" "gtin.07613035044289"]
      :gltf-ref "asset://unspsc/50/chocolate-spread-jar.glb"
      :physics {:mass-kg 0.85 :bbox-mm [90 90 120] :density-g-cm3 1.1
                :material-class :glass}
@@ -712,15 +717,22 @@
       :else
       (filterv #(= digits (:product/unspsc %)) catalog))))
 
+(defn- by-alias
+  "Find twin that lists `id` in `:product/aliases`."
+  [id]
+  (when (seq id)
+    (first (filter (fn [t] (some #{id} (:product/aliases t))) catalog))))
+
 (defn resolve-twin
   "Best-effort twin for a product map, id string, or commodity code.
 
   Match order:
   1. exact `:product/id`
-  2. exact 8-digit commodity (`:product/unspsc`)
-  3. 2-digit segment (first twin in catalog for that segment)
+  2. `:product/aliases` (seed/GTIN ids mapped onto catalog twins) → conf 1.0
+  3. exact 8-digit commodity (`:product/unspsc`) → conf 0.8
+  4. 2-digit segment (first twin in catalog for that segment) → conf 0.5
 
-  Returns `{:twin … :match :id|:commodity|:segment :confidence 1.0|0.8|0.5}`
+  Returns `{:twin … :match :id|:alias|:commodity|:segment :confidence …}`
   or nil when nothing matches."
   [product-or-id]
   (let [m (cond (map? product-or-id) product-or-id
@@ -736,11 +748,43 @@
                 (some-> m :product/unspsc-segment str))]
     (or (when-let [t (and id (by-id id))]
           {:twin t :match :id :confidence 1.0})
+        (when-let [t (and id (by-alias id))]
+          {:twin t :match :alias :confidence 1.0})
         (when-let [t (and code (>= (count (str/replace (str code) #"[^0-9]" "")) 8)
                           (first (by-unspsc code)))]
           {:twin t :match :commodity :confidence 0.8})
         (when-let [t (and seg (first (by-segment seg)))]
           {:twin t :match :segment :confidence 0.5}))))
+
+(defn maturity-scorecard
+  "Aggregate operator maturity dims into a 0–100 score.
+
+  Inputs may be a graph-routing-coverage map and optional brand-owner coverage
+  (0–1). Dimensions are equally weighted soft gates already used by doctor."
+  ([uob] (maturity-scorecard uob nil))
+  ([uob brand-owner-coverage]
+   (let [dims (cond-> {:product-twin (double (:product-twin-coverage uob 0))
+                       :high-confidence (double (:product-twin-high-confidence-coverage uob 0))
+                       :mean-confidence (double (:product-twin-mean-confidence uob 0))
+                       :twin-segment (double (:twin-segment-coverage uob 0))
+                       :operator-ready (double (:operator-ready-coverage uob 0))
+                       :registry-known (double (:registry-known-coverage uob 0))}
+                (number? brand-owner-coverage)
+                (assoc :brand-owner (double brand-owner-coverage)))
+         n (count dims)
+         score (if (pos? n)
+                 (* 100.0 (/ (reduce + 0.0 (vals dims)) n))
+                 0.0)
+         grade (cond (>= score 95) :A
+                     (>= score 85) :B
+                     (>= score 70) :C
+                     (>= score 50) :D
+                     :else :F)]
+     {:score score
+      :grade grade
+      :dims dims
+      :product-twin-by-match (:product-twin-by-match uob)
+      :mean-confidence (:product-twin-mean-confidence uob)})))
 
 (defn catalog-summary
   "Operator-facing maturity of the twin catalog.
