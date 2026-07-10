@@ -263,15 +263,27 @@
 
 ;; ───────────────────────── cloud-itonami projectors ─────────────────────────
 
-(defn ->product-party-entity
-  "Map twin → product-party / uchiwake-shaped product entity."
+(defn twin-brand-owner-id
+  "Kabuto-valid party id for a twin's representative brand-owner
+  (`org.corp.<cc>.…` — required by product-party/valid-party-id?)."
   [prod]
-  (cond-> {:product/id (:product/id prod)
-           :product/name (:product/name prod)
-           :product/unspsc (:product/unspsc prod)
-           :product/sourcing :representative}
-    (:product/brand prod) (assoc :product/brand (:product/brand prod))
-    (:product/sector prod) (assoc :product/sector (:product/sector prod))))
+  (let [seg (or (:product/unspsc-segment prod) "00")]
+    (str "org.corp.jp.unspsc-twin-" seg)))
+
+(defn ->product-party-entity
+  "Map twin → product-party / uchiwake-shaped product entity.
+  When `with-brand-owner?` (default true), sets `:product/brand-owner` so
+  bulk `import-entities` creates a brand-owner edge without interactive gate."
+  ([prod] (->product-party-entity prod true))
+  ([prod with-brand-owner?]
+   (cond-> {:product/id (:product/id prod)
+            :product/name (:product/name prod)
+            :product/unspsc (:product/unspsc prod)
+            :product/sourcing :representative}
+     (:product/brand prod) (assoc :product/brand (:product/brand prod))
+     (:product/sector prod) (assoc :product/sector (:product/sector prod))
+     with-brand-owner?
+     (assoc :product/brand-owner (twin-brand-owner-id prod)))))
 
 (defn ->plm-bom-props
   "Map twin → cloud-itonami.smartphone/bom-artifact style props map."
@@ -496,6 +508,13 @@
   "Open-business curated UNSPSC segments that should each have ≥1 twin."
   ["10" "27" "39" "43" "73"])
 
+(defn coverage-entities
+  "Uchiwake-shaped entity vector for bulk import: every twin as a product
+  with a representative brand-owner. Lifts brand-owner coverage and
+  open-business blueprint routes when imported into product-party."
+  []
+  (mapv #(->product-party-entity % true) catalog))
+
 (defn by-id
   ([] (into {} (map (juxt :product/id identity) catalog)))
   ([id] (get (by-id) (str id))))
@@ -546,3 +565,16 @@
        (double (/ (count curated-hits) (count curated)))
        0.0)
      :ids (mapv :product/id catalog)}))
+
+(defn segment-twin-stats
+  "Stats for one open-business segment entry (product twin maturity)."
+  [seg]
+  (let [twins (by-segment seg)
+        n (count twins)]
+    {:product-twins n
+     :twin-ids (mapv :product/id twins)
+     :has-sbom-twins? (and (pos? n) (every? #(seq (:product/sbom %)) twins))
+     :has-cad-twins? (and (pos? n) (every? #(seq (:product/cad-features %)) twins))
+     :has-physics-twins? (and (pos? n) (every? :product/physics twins))
+     :total-sbom-lines (reduce + 0 (map #(count (:product/sbom %)) twins))
+     :total-cad-features (reduce + 0 (map #(count (:product/cad-features %)) twins))}))
