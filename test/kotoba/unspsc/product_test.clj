@@ -82,21 +82,41 @@
       (is (= :id (:match r)))
       (is (== 1.0 (:confidence r)))
       (is (= "prod.smartphone-flagship" (get-in r [:twin :product/id])))))
-  (testing "commodity match for seed product id not in catalog"
+  (testing "seed GTIN aliases resolve at full confidence"
     (let [r (prod/resolve-twin {:product/id "gtin.05449000000996"
                                 :product/unspsc "50202301"})]
-      (is (= :commodity (:match r)))
-      (is (== 0.8 (:confidence r)))
+      (is (= :alias (:match r)))
+      (is (== 1.0 (:confidence r)))
       (is (= "50202301" (get-in r [:twin :product/unspsc])))))
-  (testing "seed commodities now match at commodity confidence"
+  (testing "seed commodities match at id/alias/commodity confidence ≥0.8"
     (doseq [[pid code] [["prod.5g-radio" "43222609"]
                         ["prod.ev-vehicle" "25101503"]
                         ["prod.aircraft-narrowbody" "25111500"]
                         ["prod.cotton-tshirt" "53102516"]
-                        ["gtin.03017620422003" "50161900"]]]
+                        ["gtin.03017620422003" "50161900"]
+                        ["gtin.05449000000996" "50202301"]
+                        ["prod.paracetamol-500" "51142003"]]]
       (let [r (prod/resolve-twin {:product/id pid :product/unspsc code})]
-        (is (#{:id :commodity} (:match r)) (str pid " match " (:match r)))
+        (is (#{:id :alias :commodity} (:match r)) (str pid " match " (:match r)))
         (is (>= (:confidence r) 0.8) (str pid " conf")))))
+  (testing "GTIN aliases resolve at confidence 1.0"
+    (let [r (prod/resolve-twin "gtin.05449000000996")]
+      (is (= :alias (:match r)))
+      (is (== 1.0 (:confidence r)))
+      (is (= "prod.beverage-can-330" (get-in r [:twin :product/id])))))
   (testing "unknown"
     (is (nil? (prod/resolve-twin {:product/id "prod.unknown"
-                                  :product/unspsc "99999999"})))))
+                                  :product/unspsc "99999999"}))))
+  (testing "maturity-scorecard aggregates dims"
+    (let [sc (prod/maturity-scorecard
+              {:product-twin-coverage 1.0
+               :product-twin-high-confidence-coverage 1.0
+               :product-twin-mean-confidence 0.96
+               :twin-segment-coverage 1.0
+               :operator-ready-coverage 1.0
+               :registry-known-coverage 1.0
+               :product-twin-by-match {:id 16 :alias 4 :commodity 0 :segment 0}}
+              1.0)]
+      (is (>= (:score sc) 95))
+      (is (= :A (:grade sc)))
+      (is (contains? (:dims sc) :brand-owner)))))
