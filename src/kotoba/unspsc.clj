@@ -7,7 +7,7 @@
 (def registry-resource "kotoba/unspsc/registry.edn")
 
 ;; registry.edn is stored as Datomic/Datascript tx-data (a single-entity vector,
-;; see schema.edn / scripts/edn-datomize.bb): top-level keys that were already
+;; see schema.edn / scripts/edn-datomize.cljs): top-level keys that were already
 ;; namespaced (:kotoba.registry/*) are unchanged, but the bare :unspsc key
 ;; (a vector-of-maps, not a Datomic scalar) was pr-str'd into a :kotoba.unspsc/unspsc
 ;; blob string. Reconstitute the original shape here so downstream callers
