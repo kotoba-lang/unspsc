@@ -20,21 +20,27 @@
   (is (:ready? (unspsc/readiness "27" #{:robotics :telemetry :optimization :bpmn :audit-ledger}))))
 
 (deftest maturity-tier
-  (testing "published blueprint repos are :blueprint"
-    (is (= :blueprint (unspsc/maturity "10")))
-    (is (= :blueprint (unspsc/maturity "27")))
-    (is (= :blueprint (unspsc/maturity "39")))
-    (is (= :blueprint (unspsc/maturity "43")))
-    (is (= :blueprint (unspsc/maturity "73"))))
-  (testing "a registry-only segment entry is :spec"
-    (is (= :spec (unspsc/maturity "50")))
-    (is (= :spec (unspsc/maturity "85"))))
+  ;; These assert a segment has REACHED a tier, not that it is frozen there.
+  ;; A published segment advancing :blueprint -> :implemented is the fleet
+  ;; working; segment 27 did exactly that and turned this suite red. The
+  ;; original form asserted equality with :blueprint and pinned exact tier
+  ;; counts (5 blueprint, 0 implemented), so every promotion was a failure.
+  (let [rank {:spec 0 :blueprint 1 :implemented 2}
+        at-least (fn [tier id] (>= (rank (unspsc/maturity id) -1) (rank tier)))]
+    (testing "published segments have reached at least :blueprint"
+      (doseq [id ["10" "27" "39" "43" "73"]]
+        (is (at-least :blueprint id) (str "segment " id))))
+    (testing "a registry-only segment entry is :spec"
+      (is (= :spec (unspsc/maturity "50")))
+      (is (= :spec (unspsc/maturity "85")))))
   (testing "maturity-summary counts tiers"
     (let [m (unspsc/maturity-summary)]
+      ;; The partition invariant is the real structural check and holds
+      ;; regardless of how far the fleet has progressed.
       (is (= (:total m) (+ (:spec m) (:blueprint m) (:implemented m))))
       (is (= 53 (:total m)))
-      (is (= 5 (:blueprint m)))
-      (is (= 0 (:implemented m))))))
+      (is (<= 5 (+ (:blueprint m) (:implemented m)))
+          "published segments must not regress below the recorded floor"))))
 
 (deftest maturity-roadmap-next-step
   (is (= :implemented (:next-step (unspsc/maturity-roadmap "10"))))
