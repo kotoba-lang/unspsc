@@ -1,10 +1,47 @@
 (ns kotoba.unspsc
-  (:require [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [clojure.set :as set]
-            [kotoba.technology :as technology]))
+  "The UNSPSC (UN Standard Products and Services Code) segment registry,
+  portable.
 
-(def registry-resource "kotoba/unspsc/registry.edn")
+  ## Why this is `.cljc` and not `.clj`
+
+  One line made this namespace JVM-only — `(slurp (io/resource …))` — and
+  with it every consumer, including the `cloud-itonami-unspsc-*` actors this
+  registry exists to feed. `kotoba.technology`, which this requires, had the
+  same line and was made portable the same day. This workspace's runtime
+  order is kotoba-wasm → clojurewasm → ClojureScript → nbb, with the JVM
+  last; a registry of facts is the last thing that should decide a
+  consumer's runtime. `kotoba.unspsc.product` beside it was already portable,
+  so this namespace was the one thing keeping the repo on the JVM.
+
+  ## No runtime file access at all
+
+  There is no portable `io/resource`, and the obvious `:cljs` substitute —
+  reading `resources/<path>` relative to the working directory — is right
+  only while this library is the root project. That was measured wrong the
+  same day in `kotoba-lang/technology`: its registry came back nil for all
+  159 of `kotoba.iso3166`'s assertions under nbb, because nbb's cwd was
+  iso3166's root and not technology's. A portability fix that works only
+  while you are the root is not one, and this library has consumers ahead
+  of it.
+
+  So the registry is compiled in, as the generated
+  `kotoba.unspsc.embedded`, projected from
+  `resources/kotoba/unspsc/registry.edn` by `tools/gen-embedded.cljs`. The
+  EDN stays the thing a human edits; `--check` refuses to let them drift.
+
+  **A registry handed in as nil still propagates as nil.** `(into {} …)`
+  over nil yields `{}`, so `by-segment` would answer a complete-looking
+  index over no data and `get-segment` nil for every code — a caller
+  passing nothing must not receive that."
+  (:require [clojure.edn :as edn]
+            [clojure.set :as set]
+            [kotoba.technology :as technology]
+            [kotoba.unspsc.embedded :as embedded]))
+
+(def registry-resource
+  "The path a human edits. Nothing reads it at runtime — see the namespace
+  docstring — it is named here so the projection can be traced back to it."
+  "kotoba/unspsc/registry.edn")
 
 ;; registry.edn is stored as Datomic/Datascript tx-data (a single-entity vector,
 ;; see schema.edn / scripts/edn-datomize.cljs): top-level keys that were already
@@ -13,19 +50,38 @@
 ;; blob string. Reconstitute the original shape here so downstream callers
 ;; (segments/by-segment/... below) keep working unchanged against a plain
 ;; :unspsc vector of un-namespaced segment maps.
-(defn registry []
-  (let [entity (first (edn/read-string (slurp (io/resource registry-resource))))]
+(defn registry
+  "The UNSPSC segment registry.
+
+  Reads `kotoba.unspsc.embedded`, a GENERATED projection of
+  `resources/kotoba/unspsc/registry.edn`, and touches no file at runtime.
+  See the namespace docstring for why a cwd-relative read was not
+  portability."
+  []
+  (let [entity (first embedded/registry-tx)]
     (-> entity
         (dissoc :db/id :kotoba.unspsc/unspsc)
         (assoc :unspsc (edn/read-string (:kotoba.unspsc/unspsc entity))))))
 
 (defn segments
-  ([] (:unspsc (registry)))
+  "The UNSPSC segment entries, or **nil** when handed a registry that has
+  none.
+
+  The zero-arg form goes through the one-arg form rather than duplicating
+  its body, so a guard added to one cannot be skipped by the other."
+  ([] (segments (registry)))
   ([reg] (:unspsc reg)))
 
 (defn by-segment
+  "Segment entries indexed by `:segment`, or **nil** when there are none.
+
+  `(into {} …)` over nil yields `{}`, which is why this needs saying: a
+  caller handing in nil would otherwise receive a complete-looking index
+  over no data, `get-segment` would answer nil for every code, and nothing
+  would distinguish that from a segment that genuinely is not registered."
   ([] (by-segment (registry)))
-  ([reg] (into {} (map (juxt :segment identity) (segments reg)))))
+  ([reg] (when-let [segs (segments reg)]
+           (into {} (map (juxt :segment identity)) segs))))
 
 (defn get-segment
   ([code] (get-segment (registry) code))

@@ -1,6 +1,6 @@
 {:paths ["src" "resources"]
  :deps {io.github.kotoba-lang/technology {:git/url "https://github.com/kotoba-lang/technology.git"
-         :git/sha "83b6661464640eb8eeec9f7bfa06f4a61369c878"}}
+         :git/sha "6dff7c1f7a10e8f9f7a05ea8c4c1731063597e79"}}
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {io.github.cognitect-labs/test-runner
