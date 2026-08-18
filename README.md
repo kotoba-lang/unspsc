@@ -59,8 +59,32 @@ future promotion, following the same `:spec` -> `:blueprint` ->
 `:implemented` path `kotoba-industry` / `kotoba-occupation` / `kotoba-cofog`
 use.
 
+## Portable, and how the registry gets compiled in
+
+`kotoba.unspsc` is `.cljc` and touches **no file at runtime** (so is
+`kotoba.unspsc.product`, which always was). The registry lives in
+`resources/kotoba/unspsc/registry.edn` — that is still the source of truth
+and the only thing to edit — and `tools/gen-embedded.cljs` projects it into
+the generated `src/kotoba/unspsc/embedded.cljc`, which is what the library
+reads.
+
+`io/resource` has no portable equivalent, and reading `resources/<path>`
+relative to the working directory is right only while this library is the
+root project — measured wrong on 2026-08-18, when `kotoba-lang/technology`
+briefly worked that way and returned nil for all 159 of `kotoba.iso3166`'s
+assertions under nbb. This registry exists to be depended on, so it is
+compiled in instead.
+
 ## Test
 
 ```bash
-clojure -M:test
+clojure -M:test                       # JVM
+
+# ClojureScript, no build step. <technology/src> is the checkout of
+# kotoba-lang/technology named in deps.edn.
+nbb --classpath src:test:<technology/src> test/run_portable.cljs
+
+nbb tools/gen-embedded.cljs           # after editing the EDN
+nbb tools/gen-embedded.cljs --check   # exit 1 if the projection is stale
+nbb tools/mutate.cljs                 # prove the suite can fail
 ```
