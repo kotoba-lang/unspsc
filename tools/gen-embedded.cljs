@@ -21,7 +21,7 @@
 ;; generated namespace is a projection of it, checked by `--check`, and it is
 ;; what the library actually reads — no runtime file access, no cwd
 ;; assumption, and it works in a browser.
-(require '["node:fs" :as fs] '[clojure.string :as str])
+(require '["node:fs" :as fs] '[kotoba.lang.text :as str])
 
 (def edn-path "resources/kotoba/unspsc/registry.edn")
 (def out-path "src/kotoba/unspsc/embedded.cljc")
