@@ -22,7 +22,7 @@
   - Not the etzhayyim 18k commodity table (classification SSoT stays there).
   - Not a full STEP/glTF binary store (binaries stay annex/B2; here is the **descriptor**).
   - Not kami-engine ECS — only data + pure projectors."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 ;; ───────────────────────── units / helpers ─────────────────────────
 
