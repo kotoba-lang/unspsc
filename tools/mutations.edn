@@ -14,7 +14,7 @@
 ;; mutations here, so a clean run of this table means "the portability
 ;; invariants are measured" and NOT "this library is measured".
 ;;
-;; ⚠ These mutations drive `clojure -M:test`. The `:cljs` half is exercised
+;; ⚠ These mutations drive `kbb -M:test`. The `:cljs` half is exercised
 ;; by `test/run_portable.cljk`, which this harness does not run — a mutation
 ;; that broke only a `:cljs` branch would survive here. Both were run by
 ;; hand; see the conversion commit message for the counts.

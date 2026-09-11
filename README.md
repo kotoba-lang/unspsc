@@ -78,13 +78,13 @@ compiled in instead.
 ## Test
 
 ```bash
-clojure -M:test                       # JVM
+kbb -M:test                       # JVM
 
 # ClojureScript, no build step. <technology/src> is the checkout of
 # kotoba-lang/technology named in deps.edn.
-nbb --classpath src:test:<technology/src> test/run_portable.cljk
+kbb --backend sci --classpath src:test:<technology/src> test/run_portable.cljk
 
-nbb tools/gen-embedded.cljk           # after editing the EDN
-nbb tools/gen-embedded.cljk --check   # exit 1 if the projection is stale
-nbb tools/mutate.cljk                 # prove the suite can fail
+kbb --backend sci tools/gen-embedded.cljk           # after editing the EDN
+kbb --backend sci tools/gen-embedded.cljk --check   # exit 1 if the projection is stale
+kbb --backend sci tools/mutate.cljk                 # prove the suite can fail
 ```
