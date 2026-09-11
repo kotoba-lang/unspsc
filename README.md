@@ -64,8 +64,8 @@ use.
 `kotoba.unspsc` is `.cljc` and touches **no file at runtime** (so is
 `kotoba.unspsc.product`, which always was). The registry lives in
 `resources/kotoba/unspsc/registry.edn` — that is still the source of truth
-and the only thing to edit — and `tools/gen-embedded.cljs` projects it into
-the generated `src/kotoba/unspsc/embedded.cljc`, which is what the library
+and the only thing to edit — and `tools/gen-embedded.cljk` projects it into
+the generated `src/kotoba/unspsc/embedded.cljk`, which is what the library
 reads.
 
 `io/resource` has no portable equivalent, and reading `resources/<path>`
@@ -82,9 +82,9 @@ clojure -M:test                       # JVM
 
 # ClojureScript, no build step. <technology/src> is the checkout of
 # kotoba-lang/technology named in deps.edn.
-nbb --classpath src:test:<technology/src> test/run_portable.cljs
+nbb --classpath src:test:<technology/src> test/run_portable.cljk
 
-nbb tools/gen-embedded.cljs           # after editing the EDN
-nbb tools/gen-embedded.cljs --check   # exit 1 if the projection is stale
-nbb tools/mutate.cljs                 # prove the suite can fail
+nbb tools/gen-embedded.cljk           # after editing the EDN
+nbb tools/gen-embedded.cljk --check   # exit 1 if the projection is stale
+nbb tools/mutate.cljk                 # prove the suite can fail
 ```

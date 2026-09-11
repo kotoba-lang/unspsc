@@ -1,5 +1,5 @@
 ;; GENERATED — do not edit. Source: resources/kotoba/unspsc/registry.edn
-;; Regenerate: nbb tools/gen-embedded.cljs   Check: --check
+;; Regenerate: nbb tools/gen-embedded.cljk   Check: --check
 ;;
 ;; This is a projection of the EDN, not a second source of truth. If
 ;; you edit it by hand `--check` fails, which is the whole point: two
