@@ -26,7 +26,7 @@
 
   So the registry is compiled in, as the generated
   `kotoba.unspsc.embedded`, projected from
-  `resources/kotoba/unspsc/registry.edn` by `tools/gen-embedded.cljs`. The
+  `resources/kotoba/unspsc/registry.edn` by `tools/gen-embedded.cljk`. The
   EDN stays the thing a human edits; `--check` refuses to let them drift.
 
   **A registry handed in as nil still propagates as nil.** `(into {} …)`
@@ -44,7 +44,7 @@
   "kotoba/unspsc/registry.edn")
 
 ;; registry.edn is stored as Datomic/Datascript tx-data (a single-entity vector,
-;; see schema.edn / scripts/edn-datomize.cljs): top-level keys that were already
+;; see schema.edn / scripts/edn-datomize.cljk): top-level keys that were already
 ;; namespaced (:kotoba.registry/*) are unchanged, but the bare :unspsc key
 ;; (a vector-of-maps, not a Datomic scalar) was pr-str'd into a :kotoba.unspsc/unspsc
 ;; blob string. Reconstitute the original shape here so downstream callers

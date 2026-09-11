@@ -1,9 +1,9 @@
 #!/usr/bin/env nbb
-;; Generate `src/kotoba/unspsc/embedded.cljc` from
+;; Generate `src/kotoba/unspsc/embedded.cljk` from
 ;; `resources/kotoba/unspsc/registry.edn`.
 ;;
-;;   nbb tools/gen-embedded.cljs           # write
-;;   nbb tools/gen-embedded.cljs --check   # exit 1 if stale, 2 if it cannot tell
+;;   nbb tools/gen-embedded.cljk           # write
+;;   nbb tools/gen-embedded.cljk --check   # exit 1 if stale, 2 if it cannot tell
 ;;
 ;; ## Why embed at all
 ;;
@@ -24,11 +24,11 @@
 (require '["node:fs" :as fs] '[kotoba.lang.text :as str])
 
 (def edn-path "resources/kotoba/unspsc/registry.edn")
-(def out-path "src/kotoba/unspsc/embedded.cljc")
+(def out-path "src/kotoba/unspsc/embedded.cljk")
 
 (defn- render [txt]
   (str ";; GENERATED — do not edit. Source: " edn-path "\n"
-       ";; Regenerate: nbb tools/gen-embedded.cljs   Check: --check\n"
+       ";; Regenerate: nbb tools/gen-embedded.cljk   Check: --check\n"
        ";;\n"
        ";; This is a projection of the EDN, not a second source of truth. If\n"
        ";; you edit it by hand `--check` fails, which is the whole point: two\n"
@@ -53,5 +53,5 @@
                          (println "wrote" out-path (count want) "bytes"))
         (= want have) (println "OK" out-path "matches" edn-path)
         :else (do (println "STALE" out-path "does not match" edn-path
-                           "— run: nbb tools/gen-embedded.cljs")
+                           "— run: nbb tools/gen-embedded.cljk")
                   (set! (.-exitCode js/process) 1))))))

@@ -6,7 +6,7 @@
 ;; not portability — a check that cannot fail. Run from the repo root, where
 ;; the drift check's `:cljs` branch looks for `resources/`:
 ;;
-;;   nbb --classpath src:test:<technology src> test/run_portable.cljs
+;;   nbb --classpath src:test:<technology src> test/run_portable.cljk
 ;;
 ;; It has also been run from a FOREIGN working directory with absolute
 ;; classpath entries, which is the condition a dependency actually meets and
