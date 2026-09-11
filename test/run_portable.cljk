@@ -1,4 +1,4 @@
-#!/usr/bin/env nbb
+#!/usr/bin/env kbb
 ;; The portable suite on nbb — no build step, no JVM.
 ;;
 ;; This file is the point of the `.cljc` conversion. A reader conditional
@@ -6,7 +6,7 @@
 ;; not portability — a check that cannot fail. Run from the repo root, where
 ;; the drift check's `:cljs` branch looks for `resources/`:
 ;;
-;;   nbb --classpath src:test:<technology src> test/run_portable.cljk
+;;   kbb --backend sci --classpath src:test:<technology src> test/run_portable.cljk
 ;;
 ;; It has also been run from a FOREIGN working directory with absolute
 ;; classpath entries, which is the condition a dependency actually meets and
