@@ -1,5 +1,5 @@
 (ns kotoba.unspsc-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.unspsc :as unspsc]
             [kotoba.unspsc.embedded :as embedded]))
 

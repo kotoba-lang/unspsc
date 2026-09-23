@@ -1,5 +1,5 @@
 (ns kotoba.unspsc.product-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.unspsc.product :as prod]))
 
 (deftest catalog-has-sbom-cad-physics-3d
