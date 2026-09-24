@@ -34,7 +34,7 @@
   index over no data and `get-segment` nil for every code — a caller
   passing nothing must not receive that."
   (:require [kotoba.lang.edn :as edn]
-            [clojure.set :as set]
+            [kotoba.lang.coll :as set]
             [kotoba.technology :as technology]
             [kotoba.unspsc.embedded :as embedded]))
 
